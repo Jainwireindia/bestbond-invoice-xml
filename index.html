@@ -1,0 +1,1651 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Best Bond Bill Builder</title>
+<meta name="description" content="Prepares Best Bond Steels sales bills in KG with weight adjustment and exports TallyPrime XML.">
+<script>try{var t=localStorage.getItem('bbbb.theme');if(t){t=JSON.parse(t);if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}}catch(e){}</script>
+<style>
+:root{--bg:#f3f4f7;--surface:#fff;--surface2:#f8f9fb;--text:#17202b;--muted:#5b6676;--border:#dbe0e8;--accent:#1d4ed8;--accent-ink:#fff;--ok:#0f7a55;--warn:#a65a05;--bad:#c0262d;--okbg:#e2f4ec;--warnbg:#fcefd6;--badbg:#fde7e7;--infobg:#e4edfd;--manual:#eaf0ff;--shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1318;--surface:#161d25;--surface2:#1b242e;--text:#e5eaf0;--muted:#93a0b1;--border:#2a3542;--accent:#6b9cff;--accent-ink:#0b1220;--ok:#4cc79a;--warn:#f0b35a;--bad:#ff8a8f;--okbg:#10372b;--warnbg:#3b2c10;--badbg:#401a1c;--infobg:#172a4d;--manual:#1a2742;--shadow:none}}
+:root[data-theme="dark"]{--bg:#0e1318;--surface:#161d25;--surface2:#1b242e;--text:#e5eaf0;--muted:#93a0b1;--border:#2a3542;--accent:#6b9cff;--accent-ink:#0b1220;--ok:#4cc79a;--warn:#f0b35a;--bad:#ff8a8f;--okbg:#10372b;--warnbg:#3b2c10;--badbg:#401a1c;--infobg:#172a4d;--manual:#1a2742;--shadow:none}
+*{box-sizing:border-box}
+html{color-scheme:light dark}
+:root[data-theme="light"]{color-scheme:light}:root[data-theme="dark"]{color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3,h4{margin:0}h2{font-size:16px;margin-bottom:12px}h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px}h4{font-size:13px;margin:12px 0 6px}
+a{color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 9px;width:100%;min-width:0}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input:disabled{background:var(--surface2);color:var(--muted)}
+textarea{resize:vertical}
+label{display:block;font-size:12px;font-weight:600;color:var(--muted)}label>input,label>select,label>textarea{margin-top:4px;font-weight:400}
+.sub{display:block;font-size:12px;font-weight:400;color:var(--muted);margin-top:4px;min-height:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}.brand h1{font-size:17px}
+.logo{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:7px;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:13px}
+.ver{font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--border);border-radius:99px;padding:1px 8px}
+.right{display:flex;align-items:center;gap:10px}.user{font-size:13px;color:var(--muted)}
+.badge{border:1px solid var(--border);border-radius:99px;padding:3px 11px;font-size:12px;font-weight:600;background:var(--surface2)}
+.badge.ok{color:var(--ok);background:var(--okbg);border-color:transparent}.badge.wait{color:var(--accent);background:var(--infobg);border-color:transparent}.badge.warn{color:var(--warn);background:var(--warnbg);border-color:transparent}.badge.bad{color:var(--bad);background:var(--badbg);border-color:transparent}.badge.off{color:var(--muted)}
+.icon{border:1px solid transparent;background:transparent;border-radius:6px;padding:2px 8px;font-size:16px;line-height:1.2}.icon:hover{background:var(--surface2);border-color:var(--border)}
+.theme{border-color:var(--border);width:34px;height:30px}
+.tabs{display:flex;gap:2px;padding:0 12px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto}
+.tabs button{border:0;background:none;padding:11px 14px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+.tabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
+main{max-width:1360px;margin:0 auto;padding:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.cardhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}.cardhead h2{margin:0}
+.count{font-size:12px;font-weight:600;color:var(--muted);background:var(--surface2);border-radius:99px;padding:1px 8px;margin-left:6px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.actions.end{justify-content:flex-end;margin-top:12px}
+.btn{border:1px solid var(--border);background:var(--surface);border-radius:7px;padding:7px 13px;font-weight:600}.btn:hover{background:var(--surface2)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.btn.primary:hover{filter:brightness(1.08)}
+.btn.danger{color:var(--bad);border-color:var(--bad)}.btn.ghost{border-color:transparent;color:var(--muted)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.grid{display:grid;gap:12px}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.span2{grid-column:span 2}.span3{grid-column:1/-1}
+.stack{display:grid;gap:12px;align-content:start}
+.form{gap:12px 14px}
+.chip{display:inline-block;font-size:11px;font-weight:600;border-radius:99px;padding:1px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);margin-right:4px}
+.chip.warn{background:var(--warnbg);color:var(--warn);border-color:transparent}.chip.info{background:var(--infobg);color:var(--accent);border-color:transparent}
+.banner{background:var(--infobg);border-radius:10px;padding:12px 16px;margin-bottom:14px}
+.billsbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.chipbill{display:inline-flex;border:1px solid var(--border);border-radius:8px;background:var(--surface);overflow:hidden}.chipbill.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.chipbill button{border:0;background:none;padding:6px 10px;font-weight:600}.chipbill .x{padding:6px 8px;color:var(--muted);border-left:1px solid var(--border)}
+.done{color:var(--ok);font-weight:600;font-size:11px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);text-align:left;padding:6px 6px;border-bottom:1px solid var(--border);white-space:nowrap}
+.r{text-align:right}
+.lines td{padding:4px 4px;vertical-align:top;border-bottom:1px solid var(--border)}
+.lines .rn{color:var(--muted);padding-top:11px;width:28px}
+.lines .c-item{min-width:290px}.lines .c-n{width:104px}.lines .c-n input{text-align:right}
+.lines input{padding:6px 8px}
+.num{font-variant-numeric:tabular-nums;text-align:right}
+td.num{padding-top:11px!important;white-space:nowrap}.strong{font-weight:700}
+.lines tr.blank td{opacity:.9}
+.lines tr.bad{box-shadow:inset 3px 0 0 var(--bad)}
+.lines tr.manual input[data-f=kg]{background:var(--manual);border-color:var(--accent)}
+.finwrap{position:relative}.finwrap .lock{position:absolute;left:-26px;top:3px;font-size:13px;color:var(--accent)}
+.finwrap .lock[hidden]{display:none}
+.tier{display:inline-block;font-size:10px;font-weight:700;border-radius:4px;padding:0 5px;background:var(--surface2);border:1px solid var(--border);color:var(--muted)}
+.tier.t1{background:var(--warnbg);color:var(--warn);border-color:transparent}.tier.t2,.tier.t3,.tier.t4{background:var(--badbg);color:var(--bad);border-color:transparent}
+.hint{font-size:11px;color:var(--muted)}
+.ok{color:var(--ok);font-weight:700}.badtxt{color:var(--bad);font-weight:600}.muted{color:var(--muted)}
+.descrow{margin-top:4px}.descrow[hidden]{display:none}
+.sumgrid{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:14px}
+.box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:3px 0;font-variant-numeric:tabular-nums}.kv span{color:var(--muted)}
+.kv.total{border-top:1px solid var(--border);margin-top:6px;padding-top:8px;font-size:18px}.kv.total span{color:var(--text);font-weight:600}
+.kv.good b{color:var(--ok)}
+.errs,.warns{margin:0 0 8px;padding-left:18px}.errs{color:var(--bad)}.warns{color:var(--warn)}.okline{color:var(--ok);font-weight:600;margin:0 0 8px}
+.errline,.err{color:var(--bad);margin:6px 0 0;min-height:1em}.warnline{color:var(--warn)}
+.choice{background:var(--warnbg);border-radius:8px;padding:12px 14px;margin:10px 0}
+.row{display:flex;gap:8px;margin:8px 0}.row input{flex:1}
+.more{margin-top:10px}.more summary{cursor:pointer;color:var(--muted)}
+.foot{color:var(--muted);font-size:12px;text-align:center}
+.grid-t td{padding:8px 6px;border-bottom:1px solid var(--border)}
+.grid-t tbody tr[data-id],.grid-t tbody tr[data-loc]{cursor:pointer}.grid-t tbody tr[data-id]:hover,.grid-t tbody tr[data-loc]:hover{background:var(--surface2)}
+.empty{text-align:center;color:var(--muted);padding:24px}
+.search{width:240px}
+.raterow{display:flex;gap:8px;align-items:center;margin:4px 0}.raterow span{flex:1}.raterow input{width:130px}.raterow.add select,.raterow.add input{flex:1;width:auto}
+.listbox{width:100%;margin-top:6px}
+.prev{margin-top:10px;max-height:260px;overflow:auto}
+.mini{font-size:12px}.mini td,.mini th{padding:3px 6px;border-bottom:1px solid var(--border)}
+.modal-bg{position:fixed;inset:0;background:rgba(10,15,22,.55);display:grid;place-items:center;padding:16px;z-index:50;overflow:auto}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:min(520px,100%);max-height:calc(100vh - 32px);display:flex;flex-direction:column}.modal.wide{width:min(860px,100%)}
+.modal header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border)}.modal header h3{font-size:16px;text-transform:none;letter-spacing:0;color:var(--text);margin:0}
+.modal .x{border:0;background:none;font-size:22px;color:var(--muted)}
+.mbody{padding:16px 18px;overflow:auto}.mbody p{margin-top:0}.pre{white-space:pre-line}
+.modal footer{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:1px solid var(--border)}
+.toasts,#toasts{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);display:grid;gap:8px;z-index:80;width:min(560px,calc(100% - 32px))}
+.toast{background:var(--text);color:var(--bg);border-radius:8px;padding:10px 14px;box-shadow:0 6px 20px rgba(0,0,0,.25);transition:opacity .35s}.toast.err{background:var(--bad);color:#fff}.toast.out{opacity:0}
+#login{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:60;padding:16px}#login[hidden]{display:none}
+.logincard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:26px;width:min(400px,100%);display:grid;gap:12px;box-shadow:var(--shadow)}.logincard h1{font-size:19px}
+@media (max-width:900px){.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}.sumgrid{grid-template-columns:1fr}.search{width:100%}}
+@media (max-width:560px){.g4,.g3{grid-template-columns:1fr}.span2,.span3{grid-column:auto}main{padding:12px}.finwrap .lock{left:auto;right:4px;top:3px}}
+@media print{.top,.tabs,.actions,#toasts{display:none}}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+</head>
+<body>
+<div id="app"><p style="padding:24px">Loading…</p></div>
+<div id="login" hidden></div>
+<div id="modalRoot"></div>
+<div id="toasts" aria-live="polite"></div>
+<noscript>This tool needs JavaScript.</noscript>
+<script>
+/* --- xml_templates.js --- */
+// GENERATED by tools/gen_templates.py from the confirmed Tally voucher - do not edit by hand
+const BB_XML_TEMPLATES = {
+ "envHead": "<ENVELOPE>\n <HEADER>\n  <TALLYREQUEST>Import Data</TALLYREQUEST>\n </HEADER>\n <BODY>\n  <IMPORTDATA>\n   <REQUESTDESC>\n    <REPORTNAME>Vouchers</REPORTNAME>\n    <STATICVARIABLES>\n     <SVCURRENTCOMPANY>{{COMPANY}}</SVCURRENTCOMPANY>\n    </STATICVARIABLES>\n   </REQUESTDESC>\n   <REQUESTDATA>\n",
+ "msg": "    <TALLYMESSAGE xmlns:UDF=\"TallyUDF\">\n     <VOUCHER VCHTYPE=\"Sales\" ACTION=\"Create\" OBJVIEW=\"Invoice Voucher View\">\n      <ADDRESS.LIST TYPE=\"String\">\n{{ADDRESS_ITEMS}}\n      </ADDRESS.LIST>\n      <DISPATCHFROMADDRESS.LIST TYPE=\"String\">\n{{DISPATCH_ITEMS}}\n      </DISPATCHFROMADDRESS.LIST>\n      <BASICBUYERADDRESS.LIST TYPE=\"String\">\n{{ADDRESS_ITEMS}}\n      </BASICBUYERADDRESS.LIST>\n      <OLDAUDITENTRYIDS.LIST TYPE=\"Number\">\n       <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>\n      </OLDAUDITENTRYIDS.LIST>\n      <DATE>{{DATE}}</DATE>\n      <REFERENCEDATE>{{DATE}}</REFERENCEDATE>\n      <VCHSTATUSDATE>{{DATE}}</VCHSTATUSDATE>\n      <GSTREGISTRATIONTYPE>Regular</GSTREGISTRATIONTYPE>\n      <VATDEALERTYPE>Regular</VATDEALERTYPE>\n      <STATENAME>{{PSTATE}}</STATENAME>\n      <ENTEREDBY>{{ENTEREDBY}}</ENTEREDBY>\n      <COUNTRYOFRESIDENCE>India</COUNTRYOFRESIDENCE>\n      <PARTYGSTIN>{{GSTIN}}</PARTYGSTIN>\n      <PLACEOFSUPPLY>{{PSTATE}}</PLACEOFSUPPLY>\n      <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>\n      <PARTYNAME>{{PARTY}}</PARTYNAME>\n      <GSTREGISTRATION TAXTYPE=\"GST\" TAXREGISTRATION=\"{{CMPGSTIN}}\">Kerala Registration</GSTREGISTRATION>\n      <CMPGSTIN>{{CMPGSTIN}}</CMPGSTIN>\n      <PARTYLEDGERNAME>{{PARTY}}</PARTYLEDGERNAME>\n      <VOUCHERNUMBER>{{VNO}}</VOUCHERNUMBER>\n{{BUYERTYPE_LINE}}      <BASICBUYERNAME>{{PARTY}}</BASICBUYERNAME>\n      <CMPGSTREGISTRATIONTYPE>Regular</CMPGSTREGISTRATIONTYPE>\n      <REFERENCE>{{REF}}</REFERENCE>\n{{VEHICLE_LINE}}      <PARTYMAILINGNAME>{{PARTY}}</PARTYMAILINGNAME>\n      <PARTYPINCODE>{{PIN}}</PARTYPINCODE>\n      <BILLTOPLACE>{{PLACE}}</BILLTOPLACE>\n      <DISPATCHFROMNAME>BEST BOND STEELS PVT LTD</DISPATCHFROMNAME>\n      <DISPATCHFROMSTATENAME>Kerala</DISPATCHFROMSTATENAME>\n      <DISPATCHFROMPINCODE>{{DISP_PIN}}</DISPATCHFROMPINCODE>\n      <DISPATCHFROMPLACE>{{DISP_PLACE}}</DISPATCHFROMPLACE>\n      <SHIPTOPLACE>{{PLACE}}</SHIPTOPLACE>\n      <CONSIGNEEGSTIN>{{GSTIN}}</CONSIGNEEGSTIN>\n      <CONSIGNEEMAILINGNAME>{{PARTY}}</CONSIGNEEMAILINGNAME>\n      <CONSIGNEEPINCODE>{{PIN}}</CONSIGNEEPINCODE>\n      <CONSIGNEESTATENAME>{{PSTATE}}</CONSIGNEESTATENAME>\n      <CMPGSTSTATE>Kerala</CMPGSTSTATE>\n      <CONSIGNEECOUNTRYNAME>India</CONSIGNEECOUNTRYNAME>\n      <BASICBASEPARTYNAME>{{PARTY}}</BASICBASEPARTYNAME>\n{{DISPATCHTYPE_LINE}}      <NUMBERINGSTYLE>Auto Renumber</NUMBERINGSTYLE>\n      <CSTFORMISSUETYPE>&#4; Not Applicable</CSTFORMISSUETYPE>\n      <CSTFORMRECVTYPE>&#4; Not Applicable</CSTFORMRECVTYPE>\n      <FBTPAYMENTTYPE>Default</FBTPAYMENTTYPE>\n      <PERSISTEDVIEW>Invoice Voucher View</PERSISTEDVIEW>\n      <VCHSTATUSTAXADJUSTMENT>Default</VCHSTATUSTAXADJUSTMENT>\n      <VCHSTATUSVOUCHERTYPE>Sales</VCHSTATUSVOUCHERTYPE>\n      <VCHSTATUSTAXUNIT>Kerala Registration</VCHSTATUSTAXUNIT>\n      <VCHGSTCLASS>&#4; Not Applicable</VCHGSTCLASS>\n      <BUYERPINNUMBER>{{PAN}}</BUYERPINNUMBER>\n      <CONSIGNEEPINNUMBER>{{PAN}}</CONSIGNEEPINNUMBER>\n      <VCHENTRYMODE>Item Invoice</VCHENTRYMODE>\n      <DIFFACTUALQTY>No</DIFFACTUALQTY>\n      <ISMSTFROMSYNC>No</ISMSTFROMSYNC>\n      <ISDELETED>No</ISDELETED>\n      <ISSECURITYONWHENENTERED>No</ISSECURITYONWHENENTERED>\n      <ASORIGINAL>No</ASORIGINAL>\n      <AUDITED>No</AUDITED>\n      <ISCOMMONPARTY>No</ISCOMMONPARTY>\n      <FORJOBCOSTING>No</FORJOBCOSTING>\n      <ISOPTIONAL>No</ISOPTIONAL>\n      <EFFECTIVEDATE>{{DATE}}</EFFECTIVEDATE>\n      <USEFOREXCISE>No</USEFOREXCISE>\n      <ISFORJOBWORKIN>No</ISFORJOBWORKIN>\n      <ALLOWCONSUMPTION>No</ALLOWCONSUMPTION>\n      <USEFORINTEREST>No</USEFORINTEREST>\n      <USEFORGAINLOSS>No</USEFORGAINLOSS>\n      <USEFORGODOWNTRANSFER>No</USEFORGODOWNTRANSFER>\n      <USEFORCOMPOUND>No</USEFORCOMPOUND>\n      <USEFORSERVICETAX>No</USEFORSERVICETAX>\n      <ISREVERSECHARGEAPPLICABLE>No</ISREVERSECHARGEAPPLICABLE>\n      <ISSYSTEM>No</ISSYSTEM>\n      <ISFETCHEDONLY>No</ISFETCHEDONLY>\n      <ISGSTOVERRIDDEN>No</ISGSTOVERRIDDEN>\n      <ISCANCELLED>No</ISCANCELLED>\n      <ISONHOLD>No</ISONHOLD>\n      <ISSUMMARY>No</ISSUMMARY>\n      <ISECOMMERCESUPPLY>No</ISECOMMERCESUPPLY>\n      <ISBOENOTAPPLICABLE>No</ISBOENOTAPPLICABLE>\n      <ISGSTSECSEVENAPPLICABLE>No</ISGSTSECSEVENAPPLICABLE>\n      <IGNOREEINVVALIDATION>No</IGNOREEINVVALIDATION>\n      <CMPGSTISOTHTERRITORYASSESSEE>No</CMPGSTISOTHTERRITORYASSESSEE>\n      <PARTYGSTISOTHTERRITORYASSESSEE>No</PARTYGSTISOTHTERRITORYASSESSEE>\n      <IRNJSONEXPORTED>No</IRNJSONEXPORTED>\n      <IRNCANCELLED>No</IRNCANCELLED>\n      <IGNOREGSTCONFLICTINMIG>No</IGNOREGSTCONFLICTINMIG>\n      <ISOPBALTRANSACTION>No</ISOPBALTRANSACTION>\n      <IGNOREGSTFORMATVALIDATION>No</IGNOREGSTFORMATVALIDATION>\n      <ISELIGIBLEFORITC>Yes</ISELIGIBLEFORITC>\n      <IGNOREGSTOPTIONALUNCERTAIN>No</IGNOREGSTOPTIONALUNCERTAIN>\n      <ISGSTREFUND>No</ISGSTREFUND>\n      <ISEWAYBILLEXCLUDED>No</ISEWAYBILLEXCLUDED>\n      <ISBUYERPEPPOLREGISTERED>No</ISBUYERPEPPOLREGISTERED>\n      <ISVATOVERRIDDEN>No</ISVATOVERRIDDEN>\n      <ISEINVOVERRIDDEN>No</ISEINVOVERRIDDEN>\n      <UPDATESUMMARYVALUES>No</UPDATESUMMARYVALUES>\n      <ISEWAYBILLAPPLICABLE>No</ISEWAYBILLAPPLICABLE>\n      <ISDELETEDRETAINED>No</ISDELETEDRETAINED>\n      <ISNULL>No</ISNULL>\n      <ISEXCISEVOUCHER>No</ISEXCISEVOUCHER>\n      <EXCISETAXOVERRIDE>No</EXCISETAXOVERRIDE>\n      <USEFORTAXUNITTRANSFER>No</USEFORTAXUNITTRANSFER>\n      <ISEXER1NOPOVERWRITE>No</ISEXER1NOPOVERWRITE>\n      <ISEXF2NOPOVERWRITE>No</ISEXF2NOPOVERWRITE>\n      <ISEXER3NOPOVERWRITE>No</ISEXER3NOPOVERWRITE>\n      <IGNOREPOSVALIDATION>No</IGNOREPOSVALIDATION>\n      <EXCISEOPENING>No</EXCISEOPENING>\n      <USEFORFINALPRODUCTION>No</USEFORFINALPRODUCTION>\n      <ISTDSOVERRIDDEN>No</ISTDSOVERRIDDEN>\n      <ISTCSOVERRIDDEN>No</ISTCSOVERRIDDEN>\n      <ISTDSTCSCASHVCH>No</ISTDSTCSCASHVCH>\n      <INCLUDEADVPYMTVCH>No</INCLUDEADVPYMTVCH>\n      <ISSUBWORKSCONTRACT>No</ISSUBWORKSCONTRACT>\n      <IGNOREORIGVCHDATE>No</IGNOREORIGVCHDATE>\n      <ISVATPAIDATCUSTOMS>No</ISVATPAIDATCUSTOMS>\n      <ISDECLAREDTOCUSTOMS>No</ISDECLAREDTOCUSTOMS>\n      <VATADVANCEPAYMENT>No</VATADVANCEPAYMENT>\n      <VATADVPAY>No</VATADVPAY>\n      <ISCSTDELCAREDGOODSSALES>No</ISCSTDELCAREDGOODSSALES>\n      <ISVATRESTAXINV>No</ISVATRESTAXINV>\n      <ISSERVICETAXOVERRIDDEN>No</ISSERVICETAXOVERRIDDEN>\n      <ISISDVOUCHER>No</ISISDVOUCHER>\n      <ISEXCISEOVERRIDDEN>No</ISEXCISEOVERRIDDEN>\n      <ISEXCISESUPPLYVCH>No</ISEXCISESUPPLYVCH>\n      <GSTNOTEXPORTED>No</GSTNOTEXPORTED>\n      <IGNOREGSTINVALIDATION>No</IGNOREGSTINVALIDATION>\n      <OVRDNEWAYBILLAPPLICABILITY>No</OVRDNEWAYBILLAPPLICABILITY>\n      <ISVATPRINCIPALACCOUNT>No</ISVATPRINCIPALACCOUNT>\n      <VCHSTATUSISVCHNUMUSED>No</VCHSTATUSISVCHNUMUSED>\n      <VCHGSTSTATUSISINCLUDED>Yes</VCHGSTSTATUSISINCLUDED>\n      <VCHGSTSTATUSISUNCERTAIN>No</VCHGSTSTATUSISUNCERTAIN>\n      <VCHGSTSTATUSISEXCLUDED>No</VCHGSTSTATUSISEXCLUDED>\n      <VCHGSTSTATUSISAPPLICABLE>Yes</VCHGSTSTATUSISAPPLICABLE>\n      <VCHGSTSTATUSISGSTR2BRECONCILED>No</VCHGSTSTATUSISGSTR2BRECONCILED>\n      <VCHGSTSTATUSISGSTR2BONLYINPORTAL>No</VCHGSTSTATUSISGSTR2BONLYINPORTAL>\n      <VCHGSTSTATUSISGSTR2BONLYINBOOKS>No</VCHGSTSTATUSISGSTR2BONLYINBOOKS>\n      <VCHGSTSTATUSISGSTR2BMISMATCH>No</VCHGSTSTATUSISGSTR2BMISMATCH>\n      <VCHGSTSTATUSISGSTR2BINDIFFPERIOD>No</VCHGSTSTATUSISGSTR2BINDIFFPERIOD>\n      <VCHGSTSTATUSISRETEFFDATEOVERRDN>No</VCHGSTSTATUSISRETEFFDATEOVERRDN>\n      <VCHGSTSTATUSISOVERRDN>No</VCHGSTSTATUSISOVERRDN>\n      <VCHGSTSTATUSISSTATINDIFFDATE>No</VCHGSTSTATUSISSTATINDIFFDATE>\n      <VCHGSTSTATUSISRETINDIFFDATE>No</VCHGSTSTATUSISRETINDIFFDATE>\n      <VCHGSTSTATUSMAINSECTIONEXCLUDED>No</VCHGSTSTATUSMAINSECTIONEXCLUDED>\n      <VCHGSTSTATUSISBRANCHTRANSFEROUT>No</VCHGSTSTATUSISBRANCHTRANSFEROUT>\n      <VCHGSTSTATUSISSYSTEMSUMMARY>No</VCHGSTSTATUSISSYSTEMSUMMARY>\n      <VCHSTATUSISUNREGISTEREDRCM>No</VCHSTATUSISUNREGISTEREDRCM>\n      <VCHSTATUSISOPTIONAL>No</VCHSTATUSISOPTIONAL>\n      <VCHSTATUSISCANCELLED>No</VCHSTATUSISCANCELLED>\n      <VCHSTATUSISDELETED>No</VCHSTATUSISDELETED>\n      <VCHSTATUSISOPENINGBALANCE>No</VCHSTATUSISOPENINGBALANCE>\n      <VCHSTATUSISFETCHEDONLY>No</VCHSTATUSISFETCHEDONLY>\n      <VCHGSTSTATUSISOPTIONALUNCERTAIN>No</VCHGSTSTATUSISOPTIONALUNCERTAIN>\n      <VCHSTATUSISREACCEPTFORHSNDONE>No</VCHSTATUSISREACCEPTFORHSNDONE>\n      <VCHSTATUSISREACCEPHSNSIXONEDONE>Yes</VCHSTATUSISREACCEPHSNSIXONEDONE>\n      <PAYMENTLINKHASMULTIREF>No</PAYMENTLINKHASMULTIREF>\n      <ISSHIPPINGWITHINSTATE>No</ISSHIPPINGWITHINSTATE>\n      <ISOVERSEASTOURISTTRANS>No</ISOVERSEASTOURISTTRANS>\n      <ISDESIGNATEDZONEPARTY>No</ISDESIGNATEDZONEPARTY>\n      <HASCASHFLOW>No</HASCASHFLOW>\n      <ISPOSTDATED>No</ISPOSTDATED>\n      <USETRACKINGNUMBER>No</USETRACKINGNUMBER>\n      <ISINVOICE>Yes</ISINVOICE>\n      <MFGJOURNAL>No</MFGJOURNAL>\n      <HASDISCOUNTS>No</HASDISCOUNTS>\n      <ASPAYSLIP>No</ASPAYSLIP>\n      <ISCOSTCENTRE>No</ISCOSTCENTRE>\n      <ISSTXNONREALIZEDVCH>No</ISSTXNONREALIZEDVCH>\n      <ISEXCISEMANUFACTURERON>No</ISEXCISEMANUFACTURERON>\n      <ISBLANKCHEQUE>No</ISBLANKCHEQUE>\n      <ISVOID>No</ISVOID>\n      <ORDERLINESTATUS>No</ORDERLINESTATUS>\n      <VATISAGNSTCANCSALES>No</VATISAGNSTCANCSALES>\n      <VATISPURCEXEMPTED>No</VATISPURCEXEMPTED>\n      <ISVATRESTAXINVOICE>No</ISVATRESTAXINVOICE>\n      <VATISASSESABLECALCVCH>No</VATISASSESABLECALCVCH>\n      <ISVATDUTYPAID>Yes</ISVATDUTYPAID>\n      <ISDELIVERYSAMEASCONSIGNEE>No</ISDELIVERYSAMEASCONSIGNEE>\n      <ISDISPATCHSAMEASCONSIGNOR>No</ISDISPATCHSAMEASCONSIGNOR>\n      <ISDELETEDVCHRETAINED>No</ISDELETEDVCHRETAINED>\n      <VCHONLYADDLINFOUPDATED>No</VCHONLYADDLINFOUPDATED>\n      <CHANGEVCHMODE>No</CHANGEVCHMODE>\n      <UAEEINVISBILLPREPAIDAMTOVRDN>No</UAEEINVISBILLPREPAIDAMTOVRDN>\n      <RESETIRNQRCODE>No</RESETIRNQRCODE>\n      <ISVCHEXCHANGED>No</ISVCHEXCHANGED>\n      <VOUCHERNUMBERSERIES>Default</VOUCHERNUMBERSERIES>\n      <EWAYBILLDETAILS.LIST>      </EWAYBILLDETAILS.LIST>\n      <EXCLUDEDTAXATIONS.LIST>      </EXCLUDEDTAXATIONS.LIST>\n      <OLDAUDITENTRIES.LIST>      </OLDAUDITENTRIES.LIST>\n      <ACCOUNTAUDITENTRIES.LIST>      </ACCOUNTAUDITENTRIES.LIST>\n      <AUDITENTRIES.LIST>      </AUDITENTRIES.LIST>\n      <DUTYHEADDETAILS.LIST>      </DUTYHEADDETAILS.LIST>\n      <GSTADVADJDETAILS.LIST>      </GSTADVADJDETAILS.LIST>\n{{LINES}}      <CONTRITRANS.LIST>      </CONTRITRANS.LIST>\n      <EWAYBILLERRORLIST.LIST>      </EWAYBILLERRORLIST.LIST>\n      <IRNERRORLIST.LIST>      </IRNERRORLIST.LIST>\n      <HARYANAVAT.LIST>      </HARYANAVAT.LIST>\n      <SUPPLEMENTARYDUTYHEADDETAILS.LIST>      </SUPPLEMENTARYDUTYHEADDETAILS.LIST>\n      <INVOICEDELNOTES.LIST>      </INVOICEDELNOTES.LIST>\n      <INVOICEORDERLIST.LIST>      </INVOICEORDERLIST.LIST>\n      <INVOICEINDENTLIST.LIST>      </INVOICEINDENTLIST.LIST>\n      <ATTENDANCEENTRIES.LIST>      </ATTENDANCEENTRIES.LIST>\n      <ORIGINVOICEDETAILS.LIST>      </ORIGINVOICEDETAILS.LIST>\n      <INVOICEEXPORTLIST.LIST>      </INVOICEEXPORTLIST.LIST>\n{{LEDGERS}}      <UAEVAT.LIST>      </UAEVAT.LIST>\n      <STKJRNLADDLCOSTDETAILS.LIST>      </STKJRNLADDLCOSTDETAILS.LIST>\n      <PAYROLLMODEOFPAYMENT.LIST>      </PAYROLLMODEOFPAYMENT.LIST>\n      <ATTDRECORDS.LIST>      </ATTDRECORDS.LIST>\n      <GSTEWAYCONSIGNORADDRESS.LIST>      </GSTEWAYCONSIGNORADDRESS.LIST>\n      <GSTEWAYCONSIGNEEADDRESS.LIST>      </GSTEWAYCONSIGNEEADDRESS.LIST>\n      <TEMPGSTRATEDETAILS.LIST>      </TEMPGSTRATEDETAILS.LIST>\n      <TEMPGSTADVADJUSTED.LIST>      </TEMPGSTADVADJUSTED.LIST>\n      <GSTBUYERADDRESS.LIST>      </GSTBUYERADDRESS.LIST>\n      <GSTCONSIGNEEADDRESS.LIST>      </GSTCONSIGNEEADDRESS.LIST>\n     </VOUCHER>\n    </TALLYMESSAGE>\n",
+ "envFoot": "   </REQUESTDATA>\n  </IMPORTDATA>\n </BODY>\n</ENVELOPE>\n",
+ "line": "      <ALLINVENTORYENTRIES.LIST>\n{{DESC_BLOCK}}       <STOCKITEMNAME>{{ITEM}}</STOCKITEMNAME>\n       <GSTOVRDNISREVCHARGEAPPL>&#4; Not Applicable</GSTOVRDNISREVCHARGEAPPL>\n       <GSTOVRDNTAXABILITY>Taxable</GSTOVRDNTAXABILITY>\n{{TAXSRC_BLOCK}}       <GSTOVRDNSTOREDNATURE/>\n       <GSTOVRDNTYPEOFSUPPLY>Goods</GSTOVRDNTYPEOFSUPPLY>\n       <GSTRATEINFERAPPLICABILITY>As per Masters/Company</GSTRATEINFERAPPLICABILITY>\n       <GSTHSNNAME>{{HSN}}</GSTHSNNAME>\n{{HSNDESC_LINE}}       <GSTHSNINFERAPPLICABILITY>As per Masters/Company</GSTHSNINFERAPPLICABILITY>\n       <GSTOVRDNISTAXONMRPAPPLICABLE>&#4; Not Applicable</GSTOVRDNISTAXONMRPAPPLICABLE>\n       <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>\n       <ISRCMAPPLICABLE>No</ISRCMAPPLICABLE>\n       <ISGSTASSESSABLEVALUEOVERRIDDEN>No</ISGSTASSESSABLEVALUEOVERRIDDEN>\n       <STRDISGSTAPPLICABLE>No</STRDISGSTAPPLICABLE>\n       <CONTENTNEGISPOS>No</CONTENTNEGISPOS>\n       <ISLASTDEEMEDPOSITIVE>No</ISLASTDEEMEDPOSITIVE>\n       <ISAUTONEGATE>No</ISAUTONEGATE>\n       <ISCUSTOMSCLEARANCE>No</ISCUSTOMSCLEARANCE>\n       <ISTRACKCOMPONENT>No</ISTRACKCOMPONENT>\n       <ISTRACKPRODUCTION>No</ISTRACKPRODUCTION>\n       <ISPRIMARYITEM>No</ISPRIMARYITEM>\n       <ISSCRAP>No</ISSCRAP>\n       <RATE>{{RATE}}</RATE>\n       <AMOUNT>{{AMOUNT}}</AMOUNT>\n       <ACTUALQTY>{{QTY}}</ACTUALQTY>\n       <BILLEDQTY>{{QTY}}</BILLEDQTY>\n       <BATCHALLOCATIONS.LIST>\n        <GODOWNNAME>{{GODOWN}}</GODOWNNAME>\n        <BATCHNAME>Primary Batch</BATCHNAME>\n        <DESTINATIONGODOWNNAME>{{GODOWN}}</DESTINATIONGODOWNNAME>\n        <INDENTNO>&#4; Not Applicable</INDENTNO>\n        <ORDERNO>&#4; Not Applicable</ORDERNO>\n        <TRACKINGNUMBER>&#4; Not Applicable</TRACKINGNUMBER>\n        <DYNAMICCSTISCLEARED>No</DYNAMICCSTISCLEARED>\n        <AMOUNT>{{AMOUNT}}</AMOUNT>\n        <ACTUALQTY>{{QTY}}</ACTUALQTY>\n        <BILLEDQTY>{{QTY}}</BILLEDQTY>\n        <ADDITIONALDETAILS.LIST>        </ADDITIONALDETAILS.LIST>\n        <VOUCHERCOMPONENTLIST.LIST>        </VOUCHERCOMPONENTLIST.LIST>\n       </BATCHALLOCATIONS.LIST>\n       <ACCOUNTINGALLOCATIONS.LIST>\n        <OLDAUDITENTRYIDS.LIST TYPE=\"Number\">\n         <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>\n        </OLDAUDITENTRYIDS.LIST>\n        <LEDGERNAME>{{SALES}}</LEDGERNAME>\n        <GSTCLASS>&#4; Not Applicable</GSTCLASS>\n        <GSTOVRDNISTAXONMRPAPPLICABLE>&#4; Not Applicable</GSTOVRDNISTAXONMRPAPPLICABLE>\n        <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>\n        <LEDGERFROMITEM>No</LEDGERFROMITEM>\n        <REMOVEZEROENTRIES>No</REMOVEZEROENTRIES>\n        <ISRCMAPPLICABLE>No</ISRCMAPPLICABLE>\n        <ISSYSTEM>No</ISSYSTEM>\n        <ISPARTYLEDGER>No</ISPARTYLEDGER>\n        <GSTOVERRIDDEN>No</GSTOVERRIDDEN>\n        <ISGSTASSESSABLEVALUEOVERRIDDEN>No</ISGSTASSESSABLEVALUEOVERRIDDEN>\n        <STRDISGSTAPPLICABLE>No</STRDISGSTAPPLICABLE>\n        <STRDGSTISPARTYLEDGER>No</STRDGSTISPARTYLEDGER>\n        <STRDGSTISDUTYLEDGER>No</STRDGSTISDUTYLEDGER>\n        <CONTENTNEGISPOS>No</CONTENTNEGISPOS>\n        <ISLASTDEEMEDPOSITIVE>No</ISLASTDEEMEDPOSITIVE>\n        <ISCAPVATTAXALTERED>No</ISCAPVATTAXALTERED>\n        <ISCAPVATNOTCLAIMED>No</ISCAPVATNOTCLAIMED>\n        <AMOUNT>{{AMOUNT}}</AMOUNT>\n        <SERVICETAXDETAILS.LIST>        </SERVICETAXDETAILS.LIST>\n        <BANKALLOCATIONS.LIST>        </BANKALLOCATIONS.LIST>\n        <BILLALLOCATIONS.LIST>        </BILLALLOCATIONS.LIST>\n        <INTERESTCOLLECTION.LIST>        </INTERESTCOLLECTION.LIST>\n        <OLDAUDITENTRIES.LIST>        </OLDAUDITENTRIES.LIST>\n        <ACCOUNTAUDITENTRIES.LIST>        </ACCOUNTAUDITENTRIES.LIST>\n        <AUDITENTRIES.LIST>        </AUDITENTRIES.LIST>\n        <INPUTCRALLOCS.LIST>        </INPUTCRALLOCS.LIST>\n        <DUTYHEADDETAILS.LIST>        </DUTYHEADDETAILS.LIST>\n        <EXCISEDUTYHEADDETAILS.LIST>        </EXCISEDUTYHEADDETAILS.LIST>\n        <RATEDETAILS.LIST>        </RATEDETAILS.LIST>\n        <SUMMARYALLOCS.LIST>        </SUMMARYALLOCS.LIST>\n        <CENVATDUTYALLOCATIONS.LIST>        </CENVATDUTYALLOCATIONS.LIST>\n        <STPYMTDETAILS.LIST>        </STPYMTDETAILS.LIST>\n        <EXCISEPAYMENTALLOCATIONS.LIST>        </EXCISEPAYMENTALLOCATIONS.LIST>\n        <TAXBILLALLOCATIONS.LIST>        </TAXBILLALLOCATIONS.LIST>\n        <TAXOBJECTALLOCATIONS.LIST>        </TAXOBJECTALLOCATIONS.LIST>\n        <TDSEXPENSEALLOCATIONS.LIST>        </TDSEXPENSEALLOCATIONS.LIST>\n        <VATSTATUTORYDETAILS.LIST>        </VATSTATUTORYDETAILS.LIST>\n        <COSTTRACKALLOCATIONS.LIST>        </COSTTRACKALLOCATIONS.LIST>\n        <REFVOUCHERDETAILS.LIST>        </REFVOUCHERDETAILS.LIST>\n        <INVOICEWISEDETAILS.LIST>        </INVOICEWISEDETAILS.LIST>\n        <VATITCDETAILS.LIST>        </VATITCDETAILS.LIST>\n        <ADVANCETAXDETAILS.LIST>        </ADVANCETAXDETAILS.LIST>\n        <TAXTYPEALLOCATIONS.LIST>        </TAXTYPEALLOCATIONS.LIST>\n       </ACCOUNTINGALLOCATIONS.LIST>\n       <DUTYHEADDETAILS.LIST>       </DUTYHEADDETAILS.LIST>\n       <RATEDETAILS.LIST>\n        <GSTRATEDUTYHEAD>CGST</GSTRATEDUTYHEAD>\n        <GSTRATEVALUATIONTYPE>Based on Value</GSTRATEVALUATIONTYPE>\n        <GSTRATE>{{GST_C}}</GSTRATE>\n       </RATEDETAILS.LIST>\n       <RATEDETAILS.LIST>\n        <GSTRATEDUTYHEAD>SGST/UTGST</GSTRATEDUTYHEAD>\n        <GSTRATEVALUATIONTYPE>Based on Value</GSTRATEVALUATIONTYPE>\n        <GSTRATE>{{GST_S}}</GSTRATE>\n       </RATEDETAILS.LIST>\n       <RATEDETAILS.LIST>\n        <GSTRATEDUTYHEAD>IGST</GSTRATEDUTYHEAD>\n        <GSTRATEVALUATIONTYPE>Based on Value</GSTRATEVALUATIONTYPE>\n        <GSTRATE>{{GST_I}}</GSTRATE>\n       </RATEDETAILS.LIST>\n       <RATEDETAILS.LIST>\n        <GSTRATEDUTYHEAD>Cess</GSTRATEDUTYHEAD>\n        <GSTRATEVALUATIONTYPE>&#4; Not Applicable</GSTRATEVALUATIONTYPE>\n       </RATEDETAILS.LIST>\n       <RATEDETAILS.LIST>\n        <GSTRATEDUTYHEAD>State Cess</GSTRATEDUTYHEAD>\n        <GSTRATEVALUATIONTYPE>Based on Value</GSTRATEVALUATIONTYPE>\n       </RATEDETAILS.LIST>\n       <SUPPLEMENTARYDUTYHEADDETAILS.LIST>       </SUPPLEMENTARYDUTYHEADDETAILS.LIST>\n       <TAXOBJECTALLOCATIONS.LIST>       </TAXOBJECTALLOCATIONS.LIST>\n       <REFVOUCHERDETAILS.LIST>       </REFVOUCHERDETAILS.LIST>\n       <EXCISEALLOCATIONS.LIST>       </EXCISEALLOCATIONS.LIST>\n       <EXPENSEALLOCATIONS.LIST>       </EXPENSEALLOCATIONS.LIST>\n      </ALLINVENTORYENTRIES.LIST>\n",
+ "descBlock": "       <BASICUSERDESCRIPTION.LIST TYPE=\"String\">\n        <BASICUSERDESCRIPTION>{{DESC}}</BASICUSERDESCRIPTION>\n       </BASICUSERDESCRIPTION.LIST>\n",
+ "groupBlock": "       <GSTSOURCETYPE>Stock Group</GSTSOURCETYPE>\n       <GSTSTOCKGROUPSOURCE>{{GROUP}}</GSTSTOCKGROUPSOURCE>\n       <HSNSOURCETYPE>Stock Group</HSNSOURCETYPE>\n       <HSNSTOCKGROUPSOURCE>{{GROUP}}</HSNSTOCKGROUPSOURCE>\n",
+ "itemBlock": "       <GSTSOURCETYPE>Stock Item</GSTSOURCETYPE>\n       <GSTITEMSOURCE>{{ITEM}}</GSTITEMSOURCE>\n       <HSNSOURCETYPE>Stock Item</HSNSOURCETYPE>\n       <HSNITEMSOURCE>{{ITEM}}</HSNITEMSOURCE>\n",
+ "partyLedger": "      <LEDGERENTRIES.LIST>\n       <OLDAUDITENTRYIDS.LIST TYPE=\"Number\">\n        <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>\n       </OLDAUDITENTRYIDS.LIST>\n       <LEDGERNAME>{{PARTY}}</LEDGERNAME>\n       <GSTCLASS>&#4; Not Applicable</GSTCLASS>\n       <GSTOVRDNISTAXONMRPAPPLICABLE>&#4; Not Applicable</GSTOVRDNISTAXONMRPAPPLICABLE>\n       <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>\n       <LEDGERFROMITEM>No</LEDGERFROMITEM>\n       <REMOVEZEROENTRIES>No</REMOVEZEROENTRIES>\n       <ISRCMAPPLICABLE>No</ISRCMAPPLICABLE>\n       <ISSYSTEM>No</ISSYSTEM>\n       <ISPARTYLEDGER>Yes</ISPARTYLEDGER>\n       <GSTOVERRIDDEN>No</GSTOVERRIDDEN>\n       <ISGSTASSESSABLEVALUEOVERRIDDEN>No</ISGSTASSESSABLEVALUEOVERRIDDEN>\n       <STRDISGSTAPPLICABLE>No</STRDISGSTAPPLICABLE>\n       <STRDGSTISPARTYLEDGER>No</STRDGSTISPARTYLEDGER>\n       <STRDGSTISDUTYLEDGER>No</STRDGSTISDUTYLEDGER>\n       <CONTENTNEGISPOS>No</CONTENTNEGISPOS>\n       <ISLASTDEEMEDPOSITIVE>Yes</ISLASTDEEMEDPOSITIVE>\n       <ISCAPVATTAXALTERED>No</ISCAPVATTAXALTERED>\n       <ISCAPVATNOTCLAIMED>No</ISCAPVATNOTCLAIMED>\n       <AMOUNT>{{NEG_TOTAL}}</AMOUNT>\n       <SERVICETAXDETAILS.LIST>       </SERVICETAXDETAILS.LIST>\n       <BANKALLOCATIONS.LIST>       </BANKALLOCATIONS.LIST>\n       <BILLALLOCATIONS.LIST>\n        <NAME>{{VNO}}</NAME>\n        <BILLTYPE>New Ref</BILLTYPE>\n        <TDSDEDUCTEEISSPECIALRATE>No</TDSDEDUCTEEISSPECIALRATE>\n        <AMOUNT>{{NEG_TOTAL}}</AMOUNT>\n        <INTERESTCOLLECTION.LIST>        </INTERESTCOLLECTION.LIST>\n        <STBILLCATEGORIES.LIST>        </STBILLCATEGORIES.LIST>\n       </BILLALLOCATIONS.LIST>\n       <INTERESTCOLLECTION.LIST>       </INTERESTCOLLECTION.LIST>\n       <OLDAUDITENTRIES.LIST>       </OLDAUDITENTRIES.LIST>\n       <ACCOUNTAUDITENTRIES.LIST>       </ACCOUNTAUDITENTRIES.LIST>\n       <AUDITENTRIES.LIST>       </AUDITENTRIES.LIST>\n       <INPUTCRALLOCS.LIST>       </INPUTCRALLOCS.LIST>\n       <DUTYHEADDETAILS.LIST>       </DUTYHEADDETAILS.LIST>\n       <EXCISEDUTYHEADDETAILS.LIST>       </EXCISEDUTYHEADDETAILS.LIST>\n       <RATEDETAILS.LIST>       </RATEDETAILS.LIST>\n       <SUMMARYALLOCS.LIST>       </SUMMARYALLOCS.LIST>\n       <CENVATDUTYALLOCATIONS.LIST>       </CENVATDUTYALLOCATIONS.LIST>\n       <STPYMTDETAILS.LIST>       </STPYMTDETAILS.LIST>\n       <EXCISEPAYMENTALLOCATIONS.LIST>       </EXCISEPAYMENTALLOCATIONS.LIST>\n       <TAXBILLALLOCATIONS.LIST>       </TAXBILLALLOCATIONS.LIST>\n       <TAXOBJECTALLOCATIONS.LIST>       </TAXOBJECTALLOCATIONS.LIST>\n       <TDSEXPENSEALLOCATIONS.LIST>       </TDSEXPENSEALLOCATIONS.LIST>\n       <VATSTATUTORYDETAILS.LIST>       </VATSTATUTORYDETAILS.LIST>\n       <COSTTRACKALLOCATIONS.LIST>       </COSTTRACKALLOCATIONS.LIST>\n       <REFVOUCHERDETAILS.LIST>       </REFVOUCHERDETAILS.LIST>\n       <INVOICEWISEDETAILS.LIST>       </INVOICEWISEDETAILS.LIST>\n       <VATITCDETAILS.LIST>       </VATITCDETAILS.LIST>\n       <ADVANCETAXDETAILS.LIST>       </ADVANCETAXDETAILS.LIST>\n       <TAXTYPEALLOCATIONS.LIST>       </TAXTYPEALLOCATIONS.LIST>\n      </LEDGERENTRIES.LIST>\n",
+ "taxLedger": "      <LEDGERENTRIES.LIST>\n       <OLDAUDITENTRYIDS.LIST TYPE=\"Number\">\n        <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>\n       </OLDAUDITENTRYIDS.LIST>\n       <ROUNDTYPE>&#4; Not Applicable</ROUNDTYPE>\n       <LEDGERNAME>{{LNAME}}</LEDGERNAME>\n       <GSTCLASS>&#4; Not Applicable</GSTCLASS>\n       <GSTOVRDNISTAXONMRPAPPLICABLE>&#4; Not Applicable</GSTOVRDNISTAXONMRPAPPLICABLE>\n       <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>\n       <LEDGERFROMITEM>No</LEDGERFROMITEM>\n       <REMOVEZEROENTRIES>No</REMOVEZEROENTRIES>\n       <ISRCMAPPLICABLE>No</ISRCMAPPLICABLE>\n       <ISSYSTEM>No</ISSYSTEM>\n       <ISPARTYLEDGER>No</ISPARTYLEDGER>\n       <GSTOVERRIDDEN>No</GSTOVERRIDDEN>\n       <ISGSTASSESSABLEVALUEOVERRIDDEN>No</ISGSTASSESSABLEVALUEOVERRIDDEN>\n       <STRDISGSTAPPLICABLE>No</STRDISGSTAPPLICABLE>\n       <STRDGSTISPARTYLEDGER>No</STRDGSTISPARTYLEDGER>\n       <STRDGSTISDUTYLEDGER>No</STRDGSTISDUTYLEDGER>\n       <CONTENTNEGISPOS>No</CONTENTNEGISPOS>\n       <ISLASTDEEMEDPOSITIVE>No</ISLASTDEEMEDPOSITIVE>\n       <ISCAPVATTAXALTERED>No</ISCAPVATTAXALTERED>\n       <ISCAPVATNOTCLAIMED>No</ISCAPVATNOTCLAIMED>\n       <AMOUNT>{{AMT}}</AMOUNT>\n       <VATEXPAMOUNT>{{AMT}}</VATEXPAMOUNT>\n       <SERVICETAXDETAILS.LIST>       </SERVICETAXDETAILS.LIST>\n       <BANKALLOCATIONS.LIST>       </BANKALLOCATIONS.LIST>\n       <BILLALLOCATIONS.LIST>       </BILLALLOCATIONS.LIST>\n       <INTERESTCOLLECTION.LIST>       </INTERESTCOLLECTION.LIST>\n       <OLDAUDITENTRIES.LIST>       </OLDAUDITENTRIES.LIST>\n       <ACCOUNTAUDITENTRIES.LIST>       </ACCOUNTAUDITENTRIES.LIST>\n       <AUDITENTRIES.LIST>       </AUDITENTRIES.LIST>\n       <INPUTCRALLOCS.LIST>       </INPUTCRALLOCS.LIST>\n       <DUTYHEADDETAILS.LIST>       </DUTYHEADDETAILS.LIST>\n       <EXCISEDUTYHEADDETAILS.LIST>       </EXCISEDUTYHEADDETAILS.LIST>\n       <RATEDETAILS.LIST>       </RATEDETAILS.LIST>\n       <SUMMARYALLOCS.LIST>       </SUMMARYALLOCS.LIST>\n       <CENVATDUTYALLOCATIONS.LIST>       </CENVATDUTYALLOCATIONS.LIST>\n       <STPYMTDETAILS.LIST>       </STPYMTDETAILS.LIST>\n       <EXCISEPAYMENTALLOCATIONS.LIST>       </EXCISEPAYMENTALLOCATIONS.LIST>\n       <TAXBILLALLOCATIONS.LIST>       </TAXBILLALLOCATIONS.LIST>\n       <TAXOBJECTALLOCATIONS.LIST>       </TAXOBJECTALLOCATIONS.LIST>\n       <TDSEXPENSEALLOCATIONS.LIST>       </TDSEXPENSEALLOCATIONS.LIST>\n       <VATSTATUTORYDETAILS.LIST>       </VATSTATUTORYDETAILS.LIST>\n       <COSTTRACKALLOCATIONS.LIST>       </COSTTRACKALLOCATIONS.LIST>\n       <REFVOUCHERDETAILS.LIST>       </REFVOUCHERDETAILS.LIST>\n       <INVOICEWISEDETAILS.LIST>       </INVOICEWISEDETAILS.LIST>\n       <VATITCDETAILS.LIST>       </VATITCDETAILS.LIST>\n       <ADVANCETAXDETAILS.LIST>       </ADVANCETAXDETAILS.LIST>\n       <TAXTYPEALLOCATIONS.LIST>       </TAXTYPEALLOCATIONS.LIST>\n      </LEDGERENTRIES.LIST>\n",
+ "roundLedger": "      <LEDGERENTRIES.LIST>\n       <OLDAUDITENTRYIDS.LIST TYPE=\"Number\">\n        <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>\n       </OLDAUDITENTRYIDS.LIST>\n       <ROUNDTYPE>Upward Rounding</ROUNDTYPE>\n       <LEDGERNAME>{{LNAME}}</LEDGERNAME>\n       <GSTCLASS>&#4; Not Applicable</GSTCLASS>\n       <GSTOVRDNISTAXONMRPAPPLICABLE>&#4; Not Applicable</GSTOVRDNISTAXONMRPAPPLICABLE>\n       <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>\n       <LEDGERFROMITEM>No</LEDGERFROMITEM>\n       <REMOVEZEROENTRIES>No</REMOVEZEROENTRIES>\n       <ISRCMAPPLICABLE>No</ISRCMAPPLICABLE>\n       <ISSYSTEM>No</ISSYSTEM>\n       <ISPARTYLEDGER>No</ISPARTYLEDGER>\n       <GSTOVERRIDDEN>No</GSTOVERRIDDEN>\n       <ISGSTASSESSABLEVALUEOVERRIDDEN>No</ISGSTASSESSABLEVALUEOVERRIDDEN>\n       <STRDISGSTAPPLICABLE>No</STRDISGSTAPPLICABLE>\n       <STRDGSTISPARTYLEDGER>No</STRDGSTISPARTYLEDGER>\n       <STRDGSTISDUTYLEDGER>No</STRDGSTISDUTYLEDGER>\n       <CONTENTNEGISPOS>No</CONTENTNEGISPOS>\n       <ISLASTDEEMEDPOSITIVE>No</ISLASTDEEMEDPOSITIVE>\n       <ISCAPVATTAXALTERED>No</ISCAPVATTAXALTERED>\n       <ISCAPVATNOTCLAIMED>No</ISCAPVATNOTCLAIMED>\n       <ROUNDLIMIT> 1</ROUNDLIMIT>\n       <AMOUNT>{{AMT}}</AMOUNT>\n       <VATEXPAMOUNT>{{AMT}}</VATEXPAMOUNT>\n       <SERVICETAXDETAILS.LIST>       </SERVICETAXDETAILS.LIST>\n       <BANKALLOCATIONS.LIST>       </BANKALLOCATIONS.LIST>\n       <BILLALLOCATIONS.LIST>       </BILLALLOCATIONS.LIST>\n       <INTERESTCOLLECTION.LIST>       </INTERESTCOLLECTION.LIST>\n       <OLDAUDITENTRIES.LIST>       </OLDAUDITENTRIES.LIST>\n       <ACCOUNTAUDITENTRIES.LIST>       </ACCOUNTAUDITENTRIES.LIST>\n       <AUDITENTRIES.LIST>       </AUDITENTRIES.LIST>\n       <INPUTCRALLOCS.LIST>       </INPUTCRALLOCS.LIST>\n       <DUTYHEADDETAILS.LIST>       </DUTYHEADDETAILS.LIST>\n       <EXCISEDUTYHEADDETAILS.LIST>       </EXCISEDUTYHEADDETAILS.LIST>\n       <RATEDETAILS.LIST>       </RATEDETAILS.LIST>\n       <SUMMARYALLOCS.LIST>       </SUMMARYALLOCS.LIST>\n       <CENVATDUTYALLOCATIONS.LIST>       </CENVATDUTYALLOCATIONS.LIST>\n       <STPYMTDETAILS.LIST>       </STPYMTDETAILS.LIST>\n       <EXCISEPAYMENTALLOCATIONS.LIST>       </EXCISEPAYMENTALLOCATIONS.LIST>\n       <TAXBILLALLOCATIONS.LIST>       </TAXBILLALLOCATIONS.LIST>\n       <TAXOBJECTALLOCATIONS.LIST>       </TAXOBJECTALLOCATIONS.LIST>\n       <TDSEXPENSEALLOCATIONS.LIST>       </TDSEXPENSEALLOCATIONS.LIST>\n       <VATSTATUTORYDETAILS.LIST>       </VATSTATUTORYDETAILS.LIST>\n       <COSTTRACKALLOCATIONS.LIST>       </COSTTRACKALLOCATIONS.LIST>\n       <REFVOUCHERDETAILS.LIST>       </REFVOUCHERDETAILS.LIST>\n       <INVOICEWISEDETAILS.LIST>       </INVOICEWISEDETAILS.LIST>\n       <VATITCDETAILS.LIST>       </VATITCDETAILS.LIST>\n       <ADVANCETAXDETAILS.LIST>       </ADVANCETAXDETAILS.LIST>\n       <TAXTYPEALLOCATIONS.LIST>       </TAXTYPEALLOCATIONS.LIST>\n      </LEDGERENTRIES.LIST>\n"
+};
+if (typeof module === "object") module.exports = BB_XML_TEMPLATES;
+
+/* --- calc.js --- */
+/* ===== BB.calc : pure functions (no DOM). Quantities in milli-units, weights in centi-KG, money in paise (all integers). ===== */
+const BBCalc = (function () {
+  'use strict';
+
+  // ---------- numbers ----------
+  function num(s) {                       // user text -> Number, NaN when blank/invalid
+    if (s === null || s === undefined) return NaN;
+    const t = String(s).replace(/,/g, '').trim();
+    if (t === '') return NaN;
+    const v = Number(t);
+    return isFinite(v) ? v : NaN;
+  }
+  function scaled(v, k) { return Math.round(Number((v * k).toPrecision(12))); }   // float-noise safe, half-up for +ve
+  function roundDiv(n, d, mode) {         // integer n / d -> integer, half-up or always-up
+    if (mode === 'up') return Math.ceil(n / d - 1e-9);
+    return Math.floor((2 * n + d) / (2 * d));
+  }
+  function inr(p, dec) {                  // paise -> '6,40,754.00' (Indian grouping)
+    const neg = p < 0; p = Math.abs(p);
+    const whole = Math.floor(p / 100), frac = p % 100;
+    let w = String(whole);
+    if (w.length > 3) { const last3 = w.slice(-3); let rest = w.slice(0, -3); rest = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ','); w = rest + ',' + last3; }
+    return (neg ? '-' : '') + w + (dec === 0 ? '' : '.' + String(frac).padStart(2, '0'));
+  }
+  function fixed(p, dec) {                // paise -> '63420.00' (XML, no grouping)
+    const neg = p < 0; p = Math.abs(p);
+    return (neg ? '-' : '') + Math.floor(p / 100) + '.' + String(p % 100).padStart(2, '0');
+  }
+  function kgFmt(c) {                     // centi-kg -> '7,134.75'
+    return inr(c);
+  }
+  function plain(n, dec) { return Number(n).toFixed(dec); }
+
+  // ---------- dates (display DD-MM-YYYY) ----------
+  function parseDate(t) {
+    if (!t) return null;
+    const m = String(t).trim().match(/^(\d{1,2})[-./ ](\d{1,2})[-./ ](\d{2}|\d{4})$/);
+    if (!m) return null;
+    let d = +m[1], mo = +m[2], y = +m[3];
+    if (y < 100) y += 2000;
+    const dt = new Date(Date.UTC(y, mo - 1, d));
+    if (dt.getUTCFullYear() !== y || dt.getUTCMonth() !== mo - 1 || dt.getUTCDate() !== d) return null;
+    return { d, m: mo, y };
+  }
+  const p2 = (n) => String(n).padStart(2, '0');
+  function fmtDate(o) { return o ? p2(o.d) + '-' + p2(o.m) + '-' + o.y : ''; }
+  function tallyDate(o) { return o.y + p2(o.m) + p2(o.d); }
+  function fyOf(o) { const s = o.m >= 4 ? o.y : o.y - 1; return p2(s % 100) + '-' + p2((s + 1) % 100); }
+  function todayDMY() { const n = new Date(); return p2(n.getDate()) + '-' + p2(n.getMonth() + 1) + '-' + n.getFullYear(); }
+  function stamp(ts) { const n = new Date(ts); return p2(n.getDate()) + '-' + p2(n.getMonth() + 1) + '-' + n.getFullYear() + ' ' + p2(n.getHours()) + ':' + p2(n.getMinutes()); }
+
+  // ---------- GST helpers ----------
+  const STATES = { '01': 'Jammu & Kashmir', '02': 'Himachal Pradesh', '03': 'Punjab', '04': 'Chandigarh', '05': 'Uttarakhand', '06': 'Haryana', '07': 'Delhi', '08': 'Rajasthan', '09': 'Uttar Pradesh', '10': 'Bihar', '11': 'Sikkim', '12': 'Arunachal Pradesh', '13': 'Nagaland', '14': 'Manipur', '15': 'Mizoram', '16': 'Tripura', '17': 'Meghalaya', '18': 'Assam', '19': 'West Bengal', '20': 'Jharkhand', '21': 'Odisha', '22': 'Chhattisgarh', '23': 'Madhya Pradesh', '24': 'Gujarat', '26': 'Dadra & Nagar Haveli and Daman & Diu', '27': 'Maharashtra', '29': 'Karnataka', '30': 'Goa', '31': 'Lakshadweep', '32': 'Kerala', '33': 'Tamil Nadu', '34': 'Puducherry', '35': 'Andaman & Nicobar Islands', '36': 'Telangana', '37': 'Andhra Pradesh', '38': 'Ladakh' };
+  function gstinOk(g) { return /^\d{2}[A-Z]{5}\d{4}[A-Z][A-Z0-9]Z[A-Z0-9]$/.test(g || ''); }
+  function stateFromGstin(g) { return STATES[(g || '').slice(0, 2)] || ''; }
+  function panFromGstin(g) { return (g || '').slice(2, 12); }
+  function normVehicle(v) { return String(v || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+  function vehicleOk(v) { return /^[A-Z]{2}\d{1,2}[A-Z]{0,3}\d{4}$/.test(v) || /^\d{2}BH\d{4}[A-Z]{2}$/.test(v); }
+
+  // ---------- item / party matching ----------
+  const norm = (t) => String(t || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  const splitAlias = (a) => String(a || '').split(';').map(norm).filter(Boolean);
+  function meshKey(text) {                // '40x40 3mm 12x4ft' and 'GI Sheet Mesh 40mm x 40mm x 3mm x 12ft x 4ft' give the same key
+    const s = String(text || '');
+    if (!/\d\s*(mm)?\s*x\s*\d/i.test(s)) return '';
+    const n = (s.match(/\d+(?:\.\d+)?/g) || []).map((x) => String(parseFloat(x)));
+    if (n.length < 4 || n.length > 5) return '';
+    const [a, b, t, ...dims] = n;
+    return a + 'x' + b + '|' + t + '|' + dims.join('x');
+  }
+  const KEYED = { sheet: 1, weldmesh: 1 };
+  function resolveItem(text, items) {
+    const q = norm(text);
+    if (!q) return { status: 'blank' };
+    const live = items.filter((i) => !i.del);
+    let hit = live.filter((i) => norm(i.name) === q);
+    if (!hit.length) hit = live.filter((i) => splitAlias(i.aliases).includes(q));
+    if (!hit.length) { const k = meshKey(text); if (k) hit = live.filter((i) => KEYED[i.family] && meshKey(i.name) === k); }
+    if (hit.length > 1) { const open = hit.filter((i) => !/^\(closed\)/i.test(i.name)); if (open.length) hit = open; }
+    if (hit.length === 1) return { status: 'ok', item: hit[0] };
+    if (hit.length > 1) return { status: 'multi', candidates: hit };
+    return { status: 'none' };
+  }
+  function resolveParty(text, parties) {
+    const q = norm(text);
+    if (!q) return { status: 'blank' };
+    const live = parties.filter((p) => !p.del);
+    let hit = live.filter((p) => norm(p.name) === q);
+    if (!hit.length) hit = live.filter((p) => splitAlias(p.aliases).includes(q));
+    if (hit.length === 1) return { status: 'ok', party: hit[0] };
+    if (hit.length > 1) return { status: 'multi', candidates: hit };
+    return { status: 'none' };
+  }
+
+  // ---------- weight adjustment ----------
+  // Spreads the reduction R over the lowest-rate lines first (B, then B+, then B++ ...).
+  function distribute(units, weights, caps) {            // even (largest-remainder) spread with caps
+    const n = weights.length, out = new Array(n).fill(0);
+    let left = units, active = [];
+    for (let i = 0; i < n; i++) if (caps[i] > 0) active.push(i);
+    while (left > 0 && active.length) {
+      const W = active.reduce((s, i) => s + (weights[i] || 1), 0);
+      const sh = active.map((i) => ({ i, ideal: left * (weights[i] || 1) / W }));
+      let given = 0;
+      sh.forEach((o) => { const g = Math.min(Math.floor(o.ideal), caps[o.i] - out[o.i]); out[o.i] += g; given += g; o.frac = o.ideal - Math.floor(o.ideal); });
+      let rest = left - given;
+      sh.sort((a, b) => (b.frac - a.frac) || (a.i - b.i));
+      for (const o of sh) { if (rest <= 0) break; if (out[o.i] < caps[o.i]) { out[o.i]++; rest--; } }
+      left = rest;
+      active = active.filter((i) => out[i] < caps[i]);
+    }
+    return out;
+  }
+  function distributeFill(units, weights, caps) {         // few lines: biggest line first, up to its cap
+    const order = weights.map((w, i) => i).sort((a, b) => (weights[b] - weights[a]) || (a - b));
+    const out = new Array(weights.length).fill(0);
+    let left = units;
+    for (const i of order) { if (left <= 0) break; const g = Math.min(caps[i], left); out[i] = g; left -= g; }
+    return out;
+  }
+  function allocate(lines, targetC, o) {
+    o = o || {};
+    const Q = Math.max(1, scaled(o.step == null ? 0.05 : o.step, 100));
+    const pct = o.maxPct == null ? 3 : o.maxPct;
+    const res = { red: lines.map(() => 0), needC: 0, shortC: 0, belowC: 0 };
+    const act = []; lines.forEach((l, i) => { if (l.active) act.push(i); });
+    const lockedSum = act.filter((i) => lines[i].locked).reduce((s, i) => s + lines[i].lockedC, 0);
+    const auto = act.filter((i) => !lines[i].locked);
+    const autoStd = auto.reduce((s, i) => s + lines[i].stdC, 0);
+    let R = autoStd + lockedSum - targetC;
+    res.needC = R;
+    if (R <= 0) { res.belowC = -R; return res; }
+    const capC = {}; auto.forEach((i) => { capC[i] = Math.floor(lines[i].stdC * pct / 100 / Q) * Q; });
+    const rates = [...new Set(auto.map((i) => (lines[i].rateP > 0 ? lines[i].rateP : Infinity)))].sort((a, b) => a - b);
+    const tiers = rates.map((r) => auto.filter((i) => (lines[i].rateP > 0 ? lines[i].rateP : Infinity) === r));
+    let rem = R;
+    for (const idx of tiers) {
+      if (rem < Q) break;
+      const caps = idx.map((i) => Math.floor(capC[i] / Q));
+      const capSum = caps.reduce((s, x) => s + x, 0);
+      const units = Math.min(Math.floor(rem / Q), capSum);
+      if (units <= 0) continue;
+      const w = idx.map((i) => lines[i].stdC);
+      const part = (o.mode === 'fill' ? distributeFill : distribute)(units, w, caps);
+      idx.forEach((i, k) => { res.red[i] += part[k] * Q; });
+      rem -= units * Q;
+    }
+    if (rem > 0) {                                         // tail below one step: place it so the total hits the target exactly
+      for (const idx of tiers) {
+        const order = idx.slice().sort((a, b) => lines[b].stdC - lines[a].stdC);
+        for (const i of order) {
+          if (rem <= 0) break;
+          const room = Math.floor(lines[i].stdC * pct / 100) - res.red[i];
+          const g = Math.min(room, rem); if (g > 0) { res.red[i] += g; rem -= g; }
+        }
+        if (rem <= 0) break;
+      }
+    }
+    res.shortC = rem;
+    return res;
+  }
+
+  // ---------- voucher numbers ----------
+  function vnoFormat(nb, n, fy) { return (nb.prefix || '') + String(n).padStart(nb.width || 4, '0') + '/' + fy; }
+  function tallyNumbers(S) { return !(S && S.numbering && S.numbering.mode === 'tool'); }   // default: Tally numbers the voucher
+  function vnoParse(v) { const m = String(v || '').match(/^(.*?)(\d+)\/(\d\d-\d\d)$/); return m ? { prefix: m[1], n: +m[2], fy: m[3] } : null; }
+
+  // ---------- the bill ----------
+  const TIERS = ['B', 'B+', 'B++', 'B+++', 'B++++'];
+  function calcBill(bill, ctx) {
+    const S = ctx.settings, itemsById = ctx.itemsById, party = bill.partyId ? ctx.partiesById[bill.partyId] : null;
+    const date = parseDate(bill.date);
+    const out = { lines: [], warnings: [], errors: [], date, party, fy: date ? fyOf(date) : '' };
+    const targetTxt = bill.target;
+    const targetN = num(targetTxt);
+    const hasTarget = isFinite(targetN) && targetN > 0;
+
+    const inter = party ? interstate(party, S) : false;
+    out.inter = inter;
+
+    // 1) per-line basics
+    const L = bill.lines.map((ln, idx) => {
+      const item = ln.itemId ? itemsById[ln.itemId] : null;
+      const unit = item ? item.unit : 'KG';
+      const r = { idx, ln, item, unit, qty: num(ln.qty), rateP: isFinite(num(ln.rate)) ? scaled(num(ln.rate), 100) : NaN, stdC: 0, active: false };
+      const blank = ln.text === '' && ln.qty === '' && !ln.itemId && ln.rate === '';
+      r.blank = blank;
+      if (unit === 'KG') {
+        const kgpc = num(ln.kgpc), stdTxt = num(ln.std);
+        if (ln.stdOvr && isFinite(stdTxt)) r.stdC = scaled(stdTxt, 100);
+        else if (isFinite(r.qty) && isFinite(kgpc)) r.stdC = scaled(r.qty * kgpc, 100);
+        else if (ln_manual(ln)) { r.stdC = scaled(num(ln.kg), 100); r.kgOnly = true; }   // only the billed KG was typed
+        else r.stdC = NaN;
+        r.active = r.stdC > 0;
+      }
+      return r;
+    });
+
+    // 2) weight adjustment (KG lines only)
+    const alloc = allocate(L.map((r) => ({
+      stdC: r.stdC > 0 ? r.stdC : 0, rateP: r.rateP, active: r.active,
+      locked: r.active && ln_manual(r.ln), lockedC: r.active && ln_manual(r.ln) ? scaled(num(r.ln.kg), 100) : 0,
+    })), hasTarget ? scaled(targetN, 100) : null, { step: S.adjStep, maxPct: S.adjMaxPct, mode: S.adjMode });
+    if (!hasTarget) alloc.red = alloc.red.map(() => 0);
+    function ln_manual(ln) { return ln.kg !== '' && ln.kg !== null && ln.kg !== undefined && isFinite(num(ln.kg)); }
+
+    // 3) rate tiers on KG lines for labelling
+    const distinct = [...new Set(L.filter((r) => r.active && r.rateP > 0).map((r) => r.rateP))].sort((a, b) => a - b);
+
+    let taxable = 0, cgst = 0, sgst = 0, igst = 0, kgStd = 0, kgFinal = 0;
+    L.forEach((r) => {
+      const ln = r.ln;
+      const o = { idx: r.idx, blank: r.blank, itemId: ln.itemId, unit: r.unit, item: r.item, status: [], rateP: r.rateP };
+      out.lines.push(o);
+      if (r.blank) return;
+      if (!r.item) { o.status.push('item'); }
+      if (!isFinite(r.rateP) || r.rateP <= 0) o.status.push('rate');
+      let qtyMilli = 0;
+      if (r.unit === 'KG') {
+        if (!(r.stdC > 0)) o.status.push('weight');
+        o.stdC = r.stdC > 0 ? r.stdC : 0;
+        o.manual = r.active && ln_manual(ln);
+        o.finalC = !r.active ? 0 : (o.manual ? scaled(num(ln.kg), 100) : r.stdC - alloc.red[r.idx]);
+        o.deltaC = o.finalC - o.stdC;
+        o.tier = r.rateP > 0 ? distinct.indexOf(r.rateP) : -1;
+        o.tierLabel = o.tier >= 0 ? (TIERS[o.tier] || 'B' + '+'.repeat(o.tier)) : '';
+        qtyMilli = o.finalC * 10;
+        kgStd += o.stdC; kgFinal += o.finalC;
+        if (o.manual && o.finalC > o.stdC) o.status.push('above-std');
+        if (r.active && o.finalC <= 0) o.status.push('weight');
+        o.qtyText = (o.finalC / 100).toFixed(2) + ' KG';
+      } else {
+        if (!(r.qty > 0)) o.status.push('qty');
+        qtyMilli = isFinite(r.qty) ? scaled(r.qty, 1000) : 0;
+        o.qtyText = r.unit === 'PCS' ? String(Math.round(qtyMilli / 1000)) + ' PCS' : (qtyMilli / 1000).toFixed(3) + ' ' + r.unit;
+      }
+      o.qtyMilli = qtyMilli;
+      o.amountP = isFinite(r.rateP) ? roundDiv(qtyMilli * (r.rateP > 0 ? r.rateP : 0), 1000, S.lineRound) : 0;
+      const g = r.item && isFinite(Number(r.item.gst)) ? Number(r.item.gst) : (S.gstDefault || 18);
+      o.gst = g;
+      if (inter) { o.igstP = roundDiv(o.amountP * g, 100, 'half'); igst += o.igstP; }
+      else { o.cgstP = roundDiv(o.amountP * g, 200, 'half'); o.sgstP = o.cgstP; cgst += o.cgstP; sgst += o.sgstP; }
+      taxable += o.amountP;
+    });
+
+    const exact = taxable + cgst + sgst + igst;
+    const grand = Math.ceil(exact / 100) * 100;
+    out.totals = { taxable, cgst, sgst, igst, exact, grand, roundoff: grand - exact, kgStd, kgFinal, kgReduced: kgStd - kgFinal };
+    out.adj = { hasTarget, targetC: hasTarget ? scaled(targetN, 100) : 0, needC: alloc.needC, shortC: alloc.shortC, belowC: alloc.belowC };
+    if (hasTarget) {
+      const diff = kgFinal - scaled(targetN, 100);
+      out.adj.diffC = diff;
+      if (alloc.belowC > 0 && diff < 0) out.warnings.push({ k: 'below', msg: 'Total is ' + kgFmt(-diff) + ' KG below the target; lines are never increased automatically.' });
+      if (alloc.shortC > 0 || diff > 0) out.warnings.push({ k: 'short', msg: 'Cannot reach the target within the limit (max ' + (S.adjMaxPct == null ? 3 : S.adjMaxPct) + '% per line): ' + kgFmt(Math.max(diff, alloc.shortC)) + ' KG still to reduce. Raise the limit in Settings or edit lines by hand.' });
+    }
+    return out;
+  }
+  function interstate(party, S) {
+    const pc = (party.gstin || '').slice(0, 2), cc = (S.cmpGstin || '').slice(0, 2);
+    if (pc && cc) return pc !== cc;
+    return !!party.state && party.state !== S.cmpState;
+  }
+
+  return { num, scaled, roundDiv, inr, fixed, kgFmt, plain, parseDate, fmtDate, tallyDate, fyOf, todayDMY, stamp, STATES, gstinOk, stateFromGstin, panFromGstin, normVehicle, vehicleOk, norm, splitAlias, meshKey, resolveItem, resolveParty, distribute, distributeFill, allocate, vnoFormat, vnoParse, tallyNumbers, calcBill, interstate, TIERS };
+})();
+if (typeof module === 'object') module.exports = BBCalc;
+
+/* --- defaults.js --- */
+/* ===== defaults shared by the app and the tests ===== */
+const BB_DEFAULTS = {
+  company: 'BEST BOND STEELS PVT LTD - 2021-23 (from-Apr-21) - (from 1-Apr-22)',
+  cmpGstin: '32AABCB2123P1ZY',
+  cmpState: 'Kerala',
+  enteredBy: 'BM',
+  gstDefault: 18,
+  hsnDefault: '73142010',
+  ledgers: { cgst: 'Cgst', sgst: 'Sgst', igst: 'Igst', round: 'ROUND OFF' },
+  salesLedgers: { '18': 'Sales @ 18%' },
+  locations: [
+    { id: 'main', name: 'Angamaly - Plot 144', addr: 'Industrial Development Plot No:144\nChempannure, South Angamaly (Before Cochin Airport)\nErnakulam, Kerala - 683573', pin: '683573', place: 'ANGAMALY', addrType: '', godown: 'A-MAIN LOCATION' },
+    { id: 'bb2', name: 'BEST BOND-2 (Inkel)', addr: 'INKEL BUSINESS PARK\nCHAMPANOOR\nSOUTH ANGAMALY\nERNAKULAM', pin: '683573', place: 'ANGAMALY', addrType: 'BEST BOND-2', godown: 'BEST BOND -2-' },
+  ],
+  godowns: ['A-MAIN LOCATION', 'BEST BOND -2-'],
+  numbering: { mode: 'tally', prefix: 'BB/', width: 4, next: {} },
+  lineRound: 'half',
+  adjStep: 0.05,
+  adjMaxPct: 3,
+  adjMode: 'even',
+  vehicles: [],
+};
+if (typeof module === 'object') module.exports = BB_DEFAULTS;
+
+/* --- data.js --- */
+/* ===== BBData : pure helpers for the stored data {items, parties, settings, log} ===== */
+const BBData = (function () {
+  'use strict';
+  const stable = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x) ? Object.keys(x).sort().reduce((o, key) => ((o[key] = x[key]), o), {}) : x));
+  const live = (a) => (a || []).filter((r) => !r.del);
+  function isEmpty(d) { return !d || (live(d.items).length === 0 && live(d.parties).length === 0); }
+  function same(a, b) { return stable(a) === stable(b); }
+  function newId(p) { return p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  function mergeList(local, cloud) {
+    const m = new Map();
+    (local || []).concat(cloud || []).forEach((r) => { const o = m.get(r.id); if (!o || (r.u || 0) >= (o.u || 0)) m.set(r.id, r); });   // newer wins; a tie goes to the cloud copy
+    return [...m.values()];
+  }
+  function merge(local, cloud) {
+    local = local || {}; cloud = cloud || {};
+    const ls = local.settings || {}, cs = cloud.settings || {};
+    const base = (cs._u || 0) > (ls._u || 0) ? cs : ls;
+    const settings = JSON.parse(JSON.stringify(base));
+    const next = {}; [ls, cs].forEach((s) => Object.entries((s.numbering && s.numbering.next) || {}).forEach(([fy, n]) => { next[fy] = Math.max(next[fy] || 0, n); }));
+    settings.numbering = Object.assign({}, settings.numbering, { next });
+    settings.vehicles = [...new Set([].concat(ls.vehicles || [], cs.vehicles || []))].slice(-30);
+    const log = mergeList(local.log, cloud.log).sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 3000);
+    return { items: mergeList(local.items, cloud.items), parties: mergeList(local.parties, cloud.parties), settings, log };
+  }
+  return { stable, isEmpty, same, newId, merge, mergeList, live };
+})();
+if (typeof module === 'object') module.exports = BBData;
+
+/* --- xml.js --- */
+/* ===== BB.xml : TallyPrime Sales voucher XML, filled by text substitution into the confirmed template ===== */
+const BBXml = (function (T, C) {
+  'use strict';
+  const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  function fill(t, map) {
+    return t.replace(/\{\{(\w+)\}\}/g, (m, k) => { if (!(k in map)) throw new Error('template value missing: ' + k); return map[k]; });
+  }
+  const lines = (txt) => String(txt || '').split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+  const listItems = (tag, arr) => arr.map((l) => '       <' + tag + '>' + esc(l) + '</' + tag + '>').join('\n');
+  const rateTxt = (p, unit) => C.fixed(p) + '/' + unit;
+  const gstTxt = (g) => ' ' + String(Number(g));
+  function cut(t, piece) { if (t.indexOf(piece) < 0) throw new Error('template changed: ' + piece.trim()); return t.replace(piece, ''); }
+
+  function lineXml(o, bill, ctx) {
+    const S = ctx.settings, it = o.item, ln = bill.lines[o.idx];
+    const godown = ln.godown || bill.godown || S.godowns[0] || '';
+    let desc = (ln.desc || '').trim();
+    if (!desc && o.unit === 'KG' && C.num(ln.qty) > 0) desc = String(C.num(ln.qty));
+    const g = o.gst;
+    let src = '';
+    if (it.taxSource === 'group' && it.group) src = fill(T.groupBlock, { GROUP: esc(it.group) });
+    else if (it.taxSource === 'item') src = fill(T.itemBlock, { ITEM: esc(it.name) });
+    return fill(T.line, {
+      DESC_BLOCK: desc ? fill(T.descBlock, { DESC: esc(desc) }) : '',
+      ITEM: esc(it.name),
+      TAXSRC_BLOCK: src,
+      HSN: esc(it.hsn || S.hsnDefault),
+      HSNDESC_LINE: it.hsnDesc ? '       <GSTHSNDESCRIPTION>' + esc(it.hsnDesc) + '</GSTHSNDESCRIPTION>\n' : '',
+      RATE: rateTxt(o.rateP, o.unit),
+      AMOUNT: C.fixed(o.amountP),
+      QTY: ' ' + o.qtyText,
+      GODOWN: esc(godown),
+      SALES: esc((S.salesLedgers && S.salesLedgers[String(g)]) || 'Sales @ ' + g + '%'),
+      GST_C: gstTxt(g / 2), GST_S: gstTxt(g / 2), GST_I: gstTxt(g),
+    });
+  }
+
+  function voucher(bill, calc, ctx) {
+    const S = ctx.settings, P = calc.party, loc = (S.locations || []).find((l) => l.id === bill.locId) || S.locations[0];
+    const vno = String(bill.vno);
+    const parsed = C.vnoParse(vno);
+    const ref = parsed ? String(parsed.n) : vno;
+    const veh = C.normVehicle(bill.vehicle);
+    const addr = lines(P.addr);
+    const used = calc.lines.filter((o) => !o.blank);
+    const ledgers = [];
+    const auto = C.tallyNumbers(S);                 // Tally gives the voucher number on import
+    let m = T.msg, pl = T.partyLedger;
+    if (auto) {
+      m = cut(m, '      <VOUCHERNUMBER>{{VNO}}</VOUCHERNUMBER>\n');
+      m = cut(m, '      <REFERENCEDATE>{{DATE}}</REFERENCEDATE>\n');
+      m = cut(m, '      <REFERENCE>{{REF}}</REFERENCE>\n');
+      const a = pl.indexOf('       <BILLALLOCATIONS.LIST>\n'), endTag = '       </BILLALLOCATIONS.LIST>\n', z = pl.indexOf(endTag);
+      if (a < 0 || z < 0) throw new Error('template changed: bill allocation block not found');
+      pl = pl.slice(0, a) + '       <BILLALLOCATIONS.LIST>       </BILLALLOCATIONS.LIST>\n' + pl.slice(z + endTag.length);
+    }
+    ledgers.push(fill(pl, { PARTY: esc(P.name), NEG_TOTAL: '-' + C.fixed(calc.totals.grand), VNO: esc(vno) }));
+    const L = S.ledgers;
+    if (calc.inter) ledgers.push(fill(T.taxLedger, { LNAME: esc(L.igst), AMT: C.fixed(calc.totals.igst) }));
+    else {
+      ledgers.push(fill(T.taxLedger, { LNAME: esc(L.cgst), AMT: C.fixed(calc.totals.cgst) }));
+      ledgers.push(fill(T.taxLedger, { LNAME: esc(L.sgst), AMT: C.fixed(calc.totals.sgst) }));
+    }
+    if (calc.totals.roundoff > 0) ledgers.push(fill(T.roundLedger, { LNAME: esc(L.round), AMT: C.fixed(calc.totals.roundoff) }));
+    m = m.replace('{{ADDRESS_ITEMS}}', () => listItems('ADDRESS', addr));
+    m = m.replace('{{ADDRESS_ITEMS}}', () => listItems('BASICBUYERADDRESS', addr));
+    return fill(m, {
+      DISPATCH_ITEMS: listItems('DISPATCHFROMADDRESS', lines(loc.addr)),
+      DATE: C.tallyDate(calc.date),
+      PSTATE: esc(P.state || C.stateFromGstin(P.gstin)),
+      ENTEREDBY: esc(S.enteredBy),
+      GSTIN: esc(P.gstin),
+      PAN: esc(C.panFromGstin(P.gstin)),
+      PARTY: esc(P.name),
+      CMPGSTIN: esc(S.cmpGstin),
+      VNO: esc(vno),
+      REF: esc(ref),
+      BUYERTYPE_LINE: P.addrType ? '      <BUYERADDRESSTYPE>' + esc(P.addrType) + '</BUYERADDRESSTYPE>\n' : '',
+      VEHICLE_LINE: veh ? '      <BASICSHIPVESSELNO>' + esc(veh) + '</BASICSHIPVESSELNO>\n' : '',
+      PIN: esc(P.pin),
+      PLACE: esc(P.place),
+      DISP_PIN: esc(loc.pin), DISP_PLACE: esc(loc.place),
+      DISPATCHTYPE_LINE: loc.addrType ? '      <DISPATCHFROMADDRESSTYPE>' + esc(loc.addrType) + '</DISPATCHFROMADDRESSTYPE>\n' : '',
+      LINES: used.map((o) => lineXml(o, bill, ctx)).join(''),
+      LEDGERS: ledgers.join(''),
+    });
+  }
+  function envelope(vouchers, ctx) {
+    return fill(T.envHead, { COMPANY: esc(ctx.settings.company) }) + vouchers.join('') + T.envFoot;
+  }
+  function fileName(bill, calc, settings, now) {
+    const first = String(calc.party.name).trim().split(/\s+/)[0].toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (settings && C.tallyNumbers(settings)) { const t = new Date(now || Date.now()), p = (n) => String(n).padStart(2, '0'); return 'Sales_' + C.fmtDate(calc.date) + '_' + first + '_' + p(t.getHours()) + p(t.getMinutes()) + '.xml'; }
+    return 'Sales_' + String(bill.vno).replace(/\//g, '_') + '_' + first + '.xml';
+  }
+  return { esc, voucher, envelope, fileName };
+})(typeof BB_XML_TEMPLATES !== 'undefined' ? BB_XML_TEMPLATES : require('./xml_templates.js'), typeof BBCalc !== 'undefined' ? BBCalc : require('./calc.js'));
+if (typeof module === 'object') module.exports = BBXml;
+
+/* --- tools.js --- */
+/* ===== BBTools : paste/Excel parsing for bills and master lists (pure) ===== */
+const BBTools = (function (C) {
+  'use strict';
+  function splitRows(text) {
+    const lines = String(text || '').replace(/\r/g, '').split('\n');
+    const tabbed = lines.some((l) => l.includes('\t'));
+    return lines.map((l) => (tabbed ? l.split('\t') : l.split(/\s{2,}/)).map((c) => c.trim()));
+  }
+  // Sheet layout: Item | Pcs | Kg per pc | Total kg | Rate.  Title row = party + date (rate in col E = party's basic rate).
+  function parseSheet(text) {
+    const rows = splitRows(text).filter((r) => r.some((c) => c !== ''));
+    const out = { title: '', partyText: '', date: '', baseRate: '', lines: [], totals: [], target: '', sumKg: 0 };
+    for (const r0 of rows) {
+      const r = r0.map((c, i) => (i >= 1 && i <= 4 ? c.replace(/^(₹|rs\.?)\s*/i, '').replace(/\s*(kgs?|nos|pcs|₹)\s*$/i, '') : c));   // '840 kg', '₹75.5'
+      const a = r[0] || '', n = [1, 2, 3].map((i) => C.num(r[i]));
+      const anyNum = n.some(isFinite), rateTxt = r[4] || '';
+      if (a && !anyNum) { if (!out.lines.length && !out.title) { out.title = a; out.baseRate = isFinite(C.num(rateTxt)) ? rateTxt : ''; } else if (isFinite(C.num(rateTxt))) out.lines.push({ text: a, qty: '', kgpc: '', kg: '', rate: rateTxt }); continue; }   // a text-only row (sub-heading) is skipped
+      if (a && anyNum) { out.lines.push({ text: a, qty: r[1] || '', kgpc: r[2] || '', kg: r[3] || '', rate: rateTxt }); continue; }
+      const v = [r[3], r[2], r[1], r[4]].map(C.num).find(isFinite);            // total row: no item text
+      if (v !== undefined) out.totals.push(v);
+    }
+    const m = out.title.match(/(\d{1,2}[.\-/]\d{1,2}[.\-/]\d{2,4})/);
+    if (m) { const d = C.parseDate(m[1]); if (d) out.date = C.fmtDate(d); }
+    out.partyText = out.title.replace(/(\d{1,2}[.\-/]\d{1,2}[.\-/]\d{2,4})/, '').replace(/[\s,:;-]+$/g, '').replace(/^[\s,:;-]+/, '').trim();
+    out.sumKg = out.lines.reduce((s, l) => { const kg = C.num(l.kg), q = C.num(l.qty), k = C.num(l.kgpc); return s + (isFinite(kg) ? kg : (isFinite(q) && isFinite(k) ? q * k : 0)); }, 0);
+    if (out.totals.length >= 2) out.target = String(out.totals[out.totals.length - 1]);
+    else if (out.totals.length === 1 && Math.abs(out.totals[0] - out.sumKg) > 0.005) out.target = String(out.totals[0]);
+    return out;
+  }
+
+  const key = (h) => String(h || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const ITEM_COLS = { name: ['name', 'itemname', 'stockitem', 'item', 'stockitemname'], family: ['family', 'type', 'category'], unit: ['unit', 'uom'], group: ['group', 'stockgroup'], taxSource: ['taxsource'], hsn: ['hsn', 'hsncode', 'hsnsac'], hsnDesc: ['hsndesc', 'hsndescription'], gst: ['gst', 'gstrate', 'tax'], kgpc: ['kgpc', 'kgperpc', 'kgperpiece', 'kgperroll', 'stdweight', 'standardweight', 'weight'], rate: ['rate', 'defaultrate', 'baserate'], aliases: ['aliases', 'alias', 'shortcodes', 'codes'] };
+  const PARTY_COLS = { name: ['name', 'partyname', 'ledger', 'ledgername', 'customer'], gstin: ['gstin', 'gstno', 'gstnumber', 'gst'], addr: ['address', 'addr'], addr1: ['address1', 'addressline1'], addr2: ['address2', 'addressline2'], addr3: ['address3', 'addressline3'], addr4: ['address4', 'addressline4'], pin: ['pin', 'pincode', 'zip'], place: ['place', 'city', 'location'], state: ['state', 'statename'], aliases: ['aliases', 'alias'], addrType: ['addrtype', 'addresstype'] };
+  function parseTable(rows, cols) {                       // rows: array of arrays, first = header
+    if (!rows.length) return [];
+    const head = rows[0].map(key), idx = {};
+    for (const [f, names] of Object.entries(cols)) { const i = head.findIndex((h) => names.includes(h)); if (i >= 0) idx[f] = i; }
+    if (idx.name === undefined) return null;
+    return rows.slice(1).filter((r) => r.some((c) => String(c).trim() !== '')).map((r) => { const o = {}; for (const [f, i] of Object.entries(idx)) o[f] = String(r[i] == null ? '' : r[i]).trim(); return o; });
+  }
+  function textToRows(text) { return splitRows(text); }
+  function inferFamily(name) {
+    const n = String(name || '');
+    if (/^3d\b/i.test(n)) return 'other';
+    if (/sheet\s*mesh/i.test(n)) return 'sheet';
+    if (/barbed/i.test(n)) return 'barbed';
+    if (/chain\s*link|chainlink/i.test(n)) return 'chainlink';
+    if (/weld\s*mesh|welded|weldmesh/i.test(n)) return 'weldmesh';
+    if (/wire/i.test(n)) return 'wire';
+    return 'other';
+  }
+  function unitOf(u) { const x = String(u || '').trim().toLowerCase().replace(/[^a-z.]/g, ''); if (/^(kg|kgs)$/.test(x)) return 'KG'; if (/^(pcs|pc|nos|no)$/.test(x)) return 'PCS'; if (/sq\.?ft|sqft/.test(x)) return 'sq.ft'; return ''; }
+  function toItem(r, defaults) {
+    const unit = unitOf(r.unit) || 'KG', group = r.group || '';
+    return { name: r.name, family: r.family || inferFamily(r.name), unit, taxSource: r.taxSource || (group ? 'group' : 'none'), group, hsn: r.hsn || defaults.hsnDefault, hsnDesc: r.hsnDesc || '', gst: isFinite(C.num(r.gst)) ? C.num(r.gst) : defaults.gstDefault, kgpc: r.kgpc || '', rate: r.rate || '', aliases: r.aliases || '' };
+  }
+  function toParty(r) {
+    const addr = r.addr ? r.addr.split(/\s*\|\s*|\n/).join('\n') : [r.addr1, r.addr2, r.addr3, r.addr4].filter(Boolean).join('\n');
+    const g = (r.gstin || '').toUpperCase().replace(/\s/g, '');
+    return { name: r.name, gstin: g, addr, pin: r.pin || '', place: r.place || '', state: r.state || C.stateFromGstin(g), aliases: r.aliases || '', addrType: r.addrType || '' };
+  }
+  return { splitRows, parseSheet, parseTable, textToRows, inferFamily, unitOf, toItem, toParty, ITEM_COLS, PARTY_COLS };
+})(typeof BBCalc !== 'undefined' ? BBCalc : require('./calc.js'));
+if (typeof module === 'object') module.exports = BBTools;
+
+/* --- sync.js --- */
+/* ===== BBSync : cloud sync client for the Apps Script web app (one JSON file in Drive) ===== */
+const BBSync = (function () {
+  'use strict';
+  const st = { status: 'off', msg: '', url: '', user: '', pass: '', rev: null, dirty: false, lastSync: 0, pending: null };
+  let H = null, pushTimer = null, pollTimer = null, chain = Promise.resolve();
+  const PUSH_DELAY = 3000, POLL_EVERY = 120000;
+
+  function emit(status, msg) { st.status = status; st.msg = msg || ''; if (H && H.onStatus) H.onStatus(info()); }
+  function info() { return { status: st.status, msg: st.msg, user: st.user, rev: st.rev, dirty: st.dirty, lastSync: st.lastSync, pending: st.pending ? { rev: st.pending.rev, by: st.pending.by, updated: st.pending.updated } : null, url: st.url }; }
+  function saveMeta() { H.saveMeta({ rev: st.rev, dirty: st.dirty, lastSync: st.lastSync }); }
+  const queue = (fn) => (chain = chain.then(fn, fn).catch(() => {}));   // one cloud operation at a time
+
+  async function call(a, extra) {
+    if (!st.url) throw { code: 'NOURL', error: 'No cloud link is set.' };
+    let r, txt;
+    try {
+      r = await H.fetch(st.url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ a: a, u: st.user, p: st.pass }, extra || {})), redirect: 'follow' });
+      txt = await r.text();
+    } catch (e) { throw { code: 'OFFLINE', error: 'No internet connection.' }; }
+    try { return JSON.parse(txt); }
+    catch (e) { throw { code: 'BADLINK', error: 'The cloud link did not answer properly. Check that the web app is deployed with access "Anyone".' }; }
+  }
+  function fail(e) {
+    if (e && e.code === 'OFFLINE') emit('offline', 'No internet. Changes stay on this PC and upload later.');
+    else if (e && (e.code === 'BAD_LOGIN' || e.code === 'PAUSED')) { loginRefused(e.error); }
+    else emit('error', (e && e.error) || String(e));
+  }
+  function loginRefused(reason) { st.pass = ''; stopLoops(); H.saveAuth(null); emit('loggedout', reason); if (H.onLoginRefused) H.onLoginRefused(reason); }
+
+  // ---- public: start / login / logout ----
+  function init(h) {
+    H = h; const m = H.loadMeta() || {};
+    st.rev = m.rev == null ? null : m.rev; st.dirty = !!m.dirty; st.lastSync = m.lastSync || 0;
+    st.url = H.url() || '';
+    const a = H.loadAuth(); if (a) { st.user = a.user; st.pass = a.pass; }
+    if (!st.url) { emit('off', 'Cloud link not set'); return Promise.resolve(); }
+    if (!st.user || !st.pass) { emit('loggedout', ''); return Promise.resolve(); }
+    emit('pending', 'Checking the cloud...');
+    return queue(async () => { try { const r = await call('login'); if (!r.ok) throw r; startLoops(); await reconcile(); } catch (e) { fail(e); if (e && e.code === 'OFFLINE') startLoops(); } });
+  }
+  async function login(user, pass) {
+    st.user = String(user || '').trim(); st.pass = String(pass || '');
+    return queue(async () => {
+      try {
+        const r = await call('login'); if (!r.ok) throw r;
+        st.user = r.user || st.user; H.saveAuth({ user: st.user, pass: st.pass });
+        startLoops(); await reconcile(); return { ok: true };
+      } catch (e) { const code = e && e.code; if (code !== 'OFFLINE') { st.pass = ''; } fail(e); return { ok: false, error: (e && e.error) || 'Login failed', code }; }
+    });
+  }
+  function logout() { stopLoops(); st.user = ''; st.pass = ''; st.pending = null; H.saveAuth(null); emit('loggedout', ''); }
+  function setUrl(u) { st.url = u || ''; if (!st.url) { stopLoops(); emit('off', 'Cloud link not set'); } }
+  function loggedIn() { return !!(st.user && st.pass && st.url); }
+
+  function startLoops() { stopLoops(); pollTimer = setInterval(() => poll(), POLL_EVERY); }
+  function stopLoops() { clearInterval(pollTimer); clearTimeout(pushTimer); pollTimer = pushTimer = null; }
+
+  // ---- first sync / pull ----
+  async function reconcile() {
+    emit('pending', 'Syncing...');
+    const c = await call('get'); if (!c.ok) throw c;
+    const local = H.getData();
+    if (!c.data) {                                           // nothing in the cloud yet
+      if (H.isEmpty(local)) { st.rev = c.rev || 0; st.dirty = false; ok(); return; }
+      st.rev = 0; st.dirty = true; saveMeta(); await push(false); return;
+    }
+    if (H.same(local, c.data)) { st.rev = c.rev; st.dirty = false; ok(); return; }   // same data: no choice needed
+    if (H.isEmpty(local)) { adopt(c); return; }
+    if (st.rev != null && !st.dirty && st.rev < c.rev) { adopt(c); return; }         // we have no unsent changes
+    if (st.rev === c.rev && st.dirty) { await push(false); return; }
+    askChoice(c);
+  }
+  function adopt(c) { H.setData(c.data); st.rev = c.rev; st.dirty = false; st.pending = null; ok(); }
+  function askChoice(c) { st.pending = { rev: c.rev, data: c.data, by: c.by, updated: c.updated }; emit('choice', 'Two PCs changed the data before syncing. Choose which copy to keep.'); }
+  function ok() { st.lastSync = Date.now(); saveMeta(); emit('synced', ''); }
+
+  // ---- push ----
+  async function push(force) {
+    emit('saving', 'Saving...');
+    const r = await call('put', { baseRev: st.rev || 0, data: H.getData(), force: !!force });
+    if (r.ok) { st.rev = r.rev; st.dirty = false; st.pending = null; ok(); return; }
+    if (r.code === 'CONFLICT') { const c = await call('get'); if (!c.ok) throw c; if (c.data && H.same(H.getData(), c.data)) { st.rev = c.rev; st.dirty = false; ok(); return; } askChoice(c); return; }
+    if (r.code === 'BUSY') { emit('pending', 'Cloud is busy; will retry.'); schedulePush(); return; }
+    throw r;
+  }
+  function schedulePush() { clearTimeout(pushTimer); pushTimer = setTimeout(() => syncNow(), PUSH_DELAY); }
+  function markDirty() {
+    st.dirty = true; saveMeta();
+    if (!loggedIn() || st.status === 'choice') return;
+    emit('pending', 'Changes waiting...'); schedulePush();
+  }
+  function syncNow() {
+    if (!loggedIn()) return Promise.resolve();
+    return queue(async () => {
+      try {
+        if (st.status === 'choice') return;
+        if (st.dirty) { await push(false); return; }
+        const r = await call('rev'); if (!r.ok) throw r;
+        if (r.rev > (st.rev || 0)) await reconcile(); else ok();
+      } catch (e) { fail(e); }
+    });
+  }
+  function poll() { if (typeof document !== 'undefined' && document.hidden) return; syncNow(); }
+
+  // ---- the yellow-box choice ----
+  function resolve(kind) {
+    return queue(async () => {
+      const p = st.pending; if (!p) return;
+      try {
+        if (kind === 'cloud') adopt({ data: p.data, rev: p.rev });
+        else if (kind === 'merge') { H.setData(H.merge(H.getData(), p.data)); st.rev = p.rev; st.dirty = true; st.pending = null; saveMeta(); await push(false); }
+        else if (kind === 'mine') { st.rev = p.rev; st.dirty = true; st.pending = null; saveMeta(); await push(true); }
+      } catch (e) { fail(e); }
+    });
+  }
+  return { init, login, logout, setUrl, loggedIn, markDirty, syncNow, resolve, info };
+})();
+if (typeof module === 'object') module.exports = BBSync;
+
+/* --- ui_base.js --- */
+/* ===== UI helpers ===== */
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
+const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const clone = (o) => JSON.parse(JSON.stringify(o));
+
+// localStorage can be missing or throw (private window, blocked site data): fall back to memory and tell the user once.
+const MEM = {}; let STORAGE_OK = true;
+const LS = {
+  get(k, def) { try { const v = window.localStorage.getItem(k); return v == null ? def : JSON.parse(v); } catch (e) { return k in MEM ? JSON.parse(MEM[k]) : def; } },
+  set(k, v) { const s = JSON.stringify(v); try { window.localStorage.setItem(k, s); return true; } catch (e) { MEM[k] = s; STORAGE_OK = false; return false; } },
+  del(k) { try { window.localStorage.removeItem(k); } catch (e) { /* ignore */ } delete MEM[k]; },
+};
+
+function toast(msg, kind) {
+  const root = $('#toasts'); if (!root) return;
+  const d = document.createElement('div'); d.className = 'toast ' + (kind || ''); d.textContent = msg; d.setAttribute('role', 'status');
+  root.appendChild(d); setTimeout(() => d.classList.add('out'), kind === 'err' ? 6000 : 3200); setTimeout(() => d.remove(), kind === 'err' ? 6600 : 3600);
+}
+function download(name, text, mime) {
+  const blob = new Blob([text], { type: mime || 'text/plain' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+let MODAL_SEQ = 0;
+function modal(o) {                       // {title, html, buttons:[{label,kind,id,onClick(close, root)}], wide, onOpen(root, close)}
+  const root = $('#modalRoot'), id = 'm' + (++MODAL_SEQ);
+  const wrap = document.createElement('div'); wrap.className = 'modal-bg'; wrap.id = id;
+  wrap.innerHTML = '<div class="modal' + (o.wide ? ' wide' : '') + '" role="dialog" aria-modal="true" aria-label="' + esc(o.title) + '"><header><h3>' + esc(o.title) + '</h3><button class="x" data-close aria-label="Close">×</button></header><div class="mbody">' + o.html + '</div><footer></footer></div>';
+  root.appendChild(wrap);
+  const foot = $('footer', wrap), prev = document.activeElement;
+  const close = (v) => { document.removeEventListener('keydown', onKey, true); wrap.remove(); if (prev && prev.focus) { try { prev.focus(); } catch (e) { /* ignore */ } } if (o.onClose) o.onClose(v); };
+  (o.buttons || []).forEach((b) => {
+    const btn = document.createElement('button'); btn.className = 'btn ' + (b.kind || ''); btn.textContent = b.label; if (b.id) btn.id = b.id;
+    btn.addEventListener('click', () => { if (b.onClick) b.onClick(close, wrap); else close(b.value); }); foot.appendChild(btn);
+  });
+  wrap.addEventListener('click', (e) => { if (e.target === wrap || e.target.hasAttribute('data-close')) close(null); });
+  function onKey(e) { if (e.key === 'Escape' && wrap === root.lastElementChild) { e.stopPropagation(); close(null); } }
+  document.addEventListener('keydown', onKey, true);
+  if (o.onOpen) o.onOpen(wrap, close);
+  const first = $('input:not([type=hidden]),select,textarea', wrap); if (first) first.focus(); else { const b = $('footer .btn', wrap); if (b) b.focus(); }
+  return { close, root: wrap };
+}
+function confirmBox(msg, okLabel, danger) {
+  return new Promise((res) => {
+    modal({ title: 'Please confirm', html: '<p class="pre">' + esc(msg) + '</p>', onClose: (v) => res(v === true),
+      buttons: [{ label: 'Cancel', value: false }, { label: okLabel || 'OK', kind: danger ? 'danger' : 'primary', value: true }] });
+  });
+}
+function fileText(file) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result)); r.onerror = () => rej(r.error); r.readAsText(file); }); }
+function fileBuf(file) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsArrayBuffer(file); }); }
+function pickFile(accept) {
+  return new Promise((res) => {
+    const i = document.createElement('input'); i.type = 'file'; i.accept = accept || ''; i.style.display = 'none';
+    i.addEventListener('change', () => { res(i.files && i.files[0] ? i.files[0] : null); i.remove(); }); document.body.appendChild(i); i.click();
+  });
+}
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+const hasXLSX = () => typeof window.XLSX !== 'undefined';
+function csvToTsv(text) {                // handles quoted cells such as "1,050.00" and "A, B"
+  const rows = []; let row = [], cell = '', q = false;
+  const t = String(text).replace(/^\uFEFF/, '');
+  for (let i = 0; i < t.length; i++) {
+    const ch = t[i];
+    if (q) { if (ch === '"') { if (t[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === ',') { row.push(cell); cell = ''; }
+    else if (ch === '\n' || ch === '\r') { if (ch === '\r' && t[i + 1] === '\n') i++; row.push(cell); rows.push(row); row = []; cell = ''; }
+    else cell += ch;
+  }
+  if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
+  return rows.map((r) => r.map((c) => c.replace(/[\t\n\r]+/g, ' ')).join('\t')).join('\n');
+}
+async function sheetToTsv(file) {         // first worksheet of an Excel/CSV file -> tab separated text
+  if (/\.csv$/i.test(file.name)) return csvToTsv(await fileText(file));
+  if (!hasXLSX()) throw new Error('The Excel reader did not load (no internet?). Copy the cells in Excel and paste them instead.');
+  const wb = window.XLSX.read(await fileBuf(file), { type: 'array' });
+  const ws = wb.Sheets[wb.SheetNames[0]];
+  const rows = window.XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: '' });
+  return rows.map((r) => r.map((c) => (c === null || c === undefined ? '' : String(c))).join('\t')).join('\n');
+}
+
+/* --- app_state.js --- */
+/* ===== state, storage, bills, validation ===== */
+const APP_VERSION = '1.1.0';
+const CLOUD_URL = '';           // paste the Apps Script web app link (ends with /exec) here, or enter it under Cloud & Backup
+const KEY = { data: 'bbbb.data.v1', bills: 'bbbb.bills.v1', meta: 'bbbb.sync.v1', auth: 'bbbb.auth.v1', theme: 'bbbb.theme', url: 'bbbb.cloudurl' };
+const C = BBCalc;
+
+const A = { tab: 'build', q: { items: '', parties: '', log: '' }, sync: { status: 'off', msg: '' }, bills: [], cur: 0, user: '' };
+let DATA = null, CTX = null, LASTC = null;
+
+function mergeDefaults(t, d) {
+  Object.keys(d).forEach((k) => {
+    if (t[k] === undefined) t[k] = clone(d[k]);
+    else if (d[k] && typeof d[k] === 'object' && !Array.isArray(d[k]) && t[k] && typeof t[k] === 'object') mergeDefaults(t[k], d[k]);
+  });
+  return t;
+}
+function normData(d) {
+  d = d || {};
+  const o = { items: Array.isArray(d.items) ? d.items : [], parties: Array.isArray(d.parties) ? d.parties : [], settings: d.settings || {}, log: Array.isArray(d.log) ? d.log : [] };
+  mergeDefaults(o.settings, BB_DEFAULTS);
+  return o;
+}
+function loadData() { return normData(LS.get(KEY.data, null)); }
+function persist() { LS.set(KEY.data, DATA); CTX = null; }
+function saveData(noSync) { persist(); if (!noSync) BBSync.markDirty(); }
+function touchSettings() { DATA.settings._u = Date.now(); saveData(); }
+function ctx() {
+  if (CTX) return CTX;
+  const items = DATA.items.filter((i) => !i.del), parties = DATA.parties.filter((p) => !p.del), itemsById = {}, partiesById = {};
+  items.forEach((i) => (itemsById[i.id] = i)); parties.forEach((p) => (partiesById[p.id] = p));
+  CTX = { items, parties, itemsById, partiesById, settings: DATA.settings };
+  return CTX;
+}
+const SET = () => DATA.settings;
+
+// ---------- bills (drafts live in this browser only) ----------
+const saveBills = debounce(() => LS.set(KEY.bills, { bills: A.bills, cur: A.cur }), 300);
+function blankLine() { return { id: BBData.newId('l'), text: '', itemId: '', qty: '', kgpc: '', kgpcAuto: false, std: '', stdOvr: false, kg: '', rate: '', rateAuto: false, desc: '' }; }
+function fyForDate(dmy) { const d = C.parseDate(dmy) || C.parseDate(C.todayDMY()); return C.fyOf(d); }
+function nextVno(dmy, exceptId) {
+  const fy = fyForDate(dmy), nb = SET().numbering;
+  let n = nb.next[fy] || 1;
+  A.bills.forEach((b) => { if (b.id === exceptId) return; const p = C.vnoParse(b.vno); if (p && p.fy === fy && p.n >= n) n = p.n + 1; });
+  return C.vnoFormat(nb, n, fy);
+}
+function newBill() {
+  const date = C.todayDMY(), loc = SET().locations[0] || {};
+  const b = { id: BBData.newId('b'), date, partyText: '', partyId: '', vno: '', vnoAuto: true, vehicle: '', locId: loc.id || '', godown: loc.godown || (SET().godowns[0] || ''), godownAuto: true, target: '', lines: [blankLine(), blankLine(), blankLine()], exported: false };
+  b.vno = nextVno(date, b.id);
+  return b;
+}
+function loadBills() {
+  const s = LS.get(KEY.bills, null);
+  A.bills = s && Array.isArray(s.bills) && s.bills.length ? s.bills : [];
+  A.cur = s && Number.isInteger(s.cur) ? Math.min(s.cur, Math.max(0, A.bills.length - 1)) : 0;
+  if (!A.bills.length) { A.bills = [newBill()]; A.cur = 0; }
+}
+const bill = () => A.bills[A.cur];
+function billLabel(b) { const i = A.bills.indexOf(b); if (C.tallyNumbers(SET())) return 'Bill ' + (i + 1); const p = C.vnoParse(b.vno); return p ? String(p.n).padStart(4, '0') : (b.vno || '—'); }
+
+// ---------- validation ----------
+function exampleVno() { return C.vnoFormat(SET().numbering, 694, fyForDate(C.todayDMY())); }
+function validate(b, calc) {
+  const E = [], W = [], S = SET();
+  if (!calc.date) E.push('Bill date is not valid. Use DD-MM-YYYY.');
+  const P = calc.party;
+  if (!b.partyId || !P) E.push('Choose the party from the party master.');
+  else {
+    if (!P.gstin) E.push('This party has no GSTIN. Add it in the party master.');
+    else if (!C.gstinOk(P.gstin)) W.push('GSTIN format looks wrong: ' + P.gstin);
+    if (!(P.addr || '').trim()) W.push('Party address is missing.');
+    if (!P.pin) W.push('Party pincode is missing.');
+    if (!P.place) W.push('Party place is missing.');
+    if (!(P.state || C.stateFromGstin(P.gstin))) E.push('Party state is missing.');
+  }
+  const used = calc.lines.filter((o) => !o.blank);
+  if (!used.length) E.push('Add at least one line.');
+  used.forEach((o) => {
+    const n = o.idx + 1;
+    if (o.status.includes('item')) E.push('Line ' + n + ': item is not in the item master.');
+    if (o.status.includes('qty')) E.push('Line ' + n + ': quantity is missing.');
+    if (o.status.includes('weight')) E.push('Line ' + n + ': weight is missing. Enter kg per piece or the standard KG.');
+    if (o.status.includes('rate')) E.push('Line ' + n + ': rate is missing.');
+    if (o.status.includes('above-std')) W.push('Line ' + n + ': billed weight is above the standard weight.');
+    if (o.item && !(S.salesLedgers && S.salesLedgers[String(o.gst)])) E.push('Line ' + n + ': set the sales ledger name for ' + o.gst + '% in Settings.');
+  });
+  const v = String(b.vno || '').trim();
+  if (C.tallyNumbers(S)) {
+    if (P) { const prev = DATA.log.find((l) => l.party === P.name && l.date === b.date && l.total === calc.totals.grand); if (prev) W.push('A bill for this party with the same date and total was already exported on ' + C.stamp(prev.ts) + '. Importing it again makes a second voucher in Tally.'); }
+  } else if (!v) E.push('Voucher number is empty.');
+  else {
+    if (!C.vnoParse(v)) W.push('Voucher number does not look like ' + exampleVno() + '.');
+    if (DATA.log.some((l) => l.voucher === v)) W.push('Voucher ' + v + ' was already exported. Importing it again will be refused or duplicated in Tally.');
+    if (A.bills.some((o) => o !== b && String(o.vno).trim() === v)) W.push('Another bill in this list has the same voucher number.');
+  }
+  if (b.vehicle && !C.vehicleOk(C.normVehicle(b.vehicle))) W.push('Vehicle number format looks unusual.');
+  if (!(S.locations || []).find((l) => l.id === b.locId)) E.push('Choose where the goods are dispatched from.');
+  calc.warnings.forEach((w) => W.push(w.msg));
+  return { E, W };
+}
+
+/* --- app_build.js --- */
+/* ===== Build bills tab ===== */
+const fmtKg = (c) => (c / 100).toFixed(2);
+const rup = (p) => '₹' + C.inr(p);
+const TIER_CLASS = ['t0', 't1', 't2', 't3', 't4'];
+
+function savedRate(b, item) {
+  if (!item) return '';
+  const p = b.partyId ? ctx().partiesById[b.partyId] : null;
+  const r = p && p.rates && p.rates[item.id];
+  return r ? String(r) : (item.rate || '');
+}
+function touchBill() { const b = bill(); if (b) b.exported = false; saveBills(); }
+
+function renderBuild() {
+  const main = $('#main'), b = bill(), S = SET(), c = ctx();
+  const noMasters = !c.items.length || !c.parties.length;
+  const opt = (arr, sel, f) => arr.map((x) => '<option value="' + esc(f(x)[0]) + '"' + (f(x)[0] === sel ? ' selected' : '') + '>' + esc(f(x)[1]) + '</option>').join('');
+  main.innerHTML =
+    (noMasters ? '<div class="banner"><b>No ' + (!c.items.length ? 'items' : 'parties') + ' yet.</b> Bills only use items and parties that already exist in the masters. Load them under <a href="#" data-tab="cloud">Cloud &amp; Backup</a> (restore a backup file) or add them in the <a href="#" data-tab="items">Item master</a> and <a href="#" data-tab="parties">Party master</a>.</div>' : '') +
+    '<div class="billsbar" id="billsbar"></div>' +
+    '<section class="card"><h2>Bill details</h2><div class="grid g4">' +
+    '<label>Bill date<input data-b="date" value="' + esc(b.date) + '" placeholder="DD-MM-YYYY" inputmode="numeric" autocomplete="off"></label>' +
+    '<label class="span2">Party<input data-b="partyText" list="dlParties" value="' + esc(b.partyText) + '" placeholder="Start typing the party name" autocomplete="off"><div class="sub" id="partyInfo"></div></label>' +
+    (C.tallyNumbers(S) ? '<label>Voucher no.<input value="Given by Tally on import" disabled title="Tally numbers the voucher (Settings > Voucher numbers)"></label>' : '<label>Voucher no.<input data-b="vno" value="' + esc(b.vno) + '" autocomplete="off"></label>') +
+    '<label>Vehicle no.<input data-b="vehicle" list="dlVeh" value="' + esc(b.vehicle) + '" placeholder="KL07CP8663" autocomplete="off"></label>' +
+    '<label>Dispatch from<select data-b="locId">' + opt(S.locations, b.locId, (l) => [l.id, l.name]) + '</select></label>' +
+    '<label>Godown<select data-b="godown">' + opt(S.godowns, b.godown, (g) => [g, g]) + '</select></label>' +
+    '<label class="span2">Dispatch weight (KG), optional<input data-b="target" value="' + esc(b.target) + '" inputmode="decimal" placeholder="e.g. 7080" autocomplete="off"><div class="sub">When filled, weights are cut down to this total: lowest rate (B) lines first, then B+, then B++. Edit any line by hand and the others adjust around it.</div></label>' +
+    '</div></section>' +
+    '<section class="card"><div class="cardhead"><h2>Lines</h2><div class="actions">' +
+    '<button class="btn" data-act="addline">+ Add line</button><button class="btn" data-act="paste">Paste from sheet…</button><button class="btn" data-act="xlsxbill">Import Excel…</button><button class="btn ghost" data-act="clearlines">Clear lines</button></div></div>' +
+    '<div class="tablewrap"><table class="lines"><thead><tr><th>#</th><th>Item</th><th class="r">Pcs / qty</th><th class="r">Kg per pc</th><th class="r">Std KG</th><th class="r">Rate ₹</th><th class="r">Billed KG</th><th class="r">Cut</th><th class="r">Amount ₹</th><th></th></tr></thead><tbody id="lines">' +
+    b.lines.map(rowHtml).join('') + '</tbody></table></div></section>' +
+    '<section class="card" id="sumcard"></section>' +
+    '<datalist id="dlParties">' + c.parties.map((p) => '<option value="' + esc(p.name) + '">').join('') + '</datalist>' +
+    '<datalist id="dlItems">' + c.items.map((i) => '<option value="' + esc(i.name) + '">').join('') + '</datalist>' +
+    '<datalist id="dlVeh">' + (S.vehicles || []).map((v) => '<option value="' + esc(v) + '">').join('') + '</datalist>';
+  syncBill();
+}
+function refreshLists() {
+  const c = ctx(), S = SET(), set = (id, html) => { const e = $('#' + id); if (e) e.innerHTML = html; };
+  set('dlParties', c.parties.map((p) => '<option value="' + esc(p.name) + '">').join(''));
+  set('dlItems', c.items.map((i) => '<option value="' + esc(i.name) + '">').join(''));
+  set('dlVeh', (S.vehicles || []).map((v) => '<option value="' + esc(v) + '">').join(''));
+}
+function rowHtml(ln, i) {
+  const n = i + 1;
+  return '<tr data-i="' + i + '"><td class="rn">' + n + '</td>' +
+    '<td class="c-item"><input data-f="text" list="dlItems" value="' + esc(ln.text) + '" placeholder="Item: short code or Tally name" autocomplete="off" aria-label="Item, line ' + n + '"><div class="sub" data-o="sub"></div>' +
+    '<div class="descrow" data-o="descrow" hidden><input data-f="desc" value="' + esc(ln.desc) + '" placeholder="Description shown on the bill (optional)" aria-label="Description, line ' + n + '"></div></td>' +
+    '<td class="c-n"><input data-f="qty" class="num" inputmode="decimal" value="' + esc(ln.qty) + '" aria-label="Pieces or quantity, line ' + n + '"></td>' +
+    '<td class="c-n"><input data-f="kgpc" class="num" inputmode="decimal" aria-label="KG per piece, line ' + n + '"></td>' +
+    '<td class="c-n"><input data-f="std" class="num" inputmode="decimal" aria-label="Standard KG, line ' + n + '"></td>' +
+    '<td class="c-n"><input data-f="rate" class="num" inputmode="decimal" aria-label="Rate, line ' + n + '"><div class="sub rt" data-o="rsub"></div></td>' +
+    '<td class="c-n"><div class="finwrap"><input data-f="kg" class="num" inputmode="decimal" aria-label="Billed KG, line ' + n + '"><button class="icon lock" data-act="unlock" title="Set by hand. Click to give this line back to the rule." aria-label="Give line ' + n + ' back to the rule" tabindex="-1">✎</button></div></td>' +
+    '<td class="c-n num" data-o="delta"></td><td class="c-n num strong" data-o="amount"></td>' +
+    '<td><button class="icon" data-act="delline" title="Remove line" aria-label="Remove line ' + n + '">×</button></td></tr>';
+}
+
+function syncBill() {
+  const b = bill(); if (!b || A.tab !== 'build') return;
+  const c = ctx(), calc = C.calcBill(b, c), v = validate(b, calc), focus = document.activeElement;
+  LASTC = { calc, v };
+  calc.lines.forEach((o, i) => {
+    const tr = $('#lines tr[data-i="' + i + '"]'); if (!tr) return;
+    const ln = b.lines[i], isKg = o.unit === 'KG';
+    const el = (f) => $('[data-f="' + f + '"]', tr);
+    const put = (f, val) => { const e = el(f); if (e && e !== focus && e.value !== val) e.value = val; };
+    ['kgpc', 'std', 'kg'].forEach((f) => { el(f).disabled = !isKg; });
+    put('text', ln.text); put('qty', ln.qty); put('rate', ln.rate); put('desc', ln.desc);
+    put('kgpc', isKg ? ln.kgpc : '');
+    put('std', isKg ? (ln.stdOvr ? ln.std : (o.stdC > 0 ? fmtKg(o.stdC) : '')) : '');
+    put('kg', isKg ? (o.manual ? ln.kg : (o.stdC > 0 ? fmtKg(o.finalC) : '')) : '');
+    tr.classList.toggle('manual', !!o.manual); tr.classList.toggle('blank', !!o.blank);
+    tr.classList.toggle('bad', !o.blank && o.status.some((s) => ['item', 'qty', 'weight', 'rate'].includes(s)));
+    $('.lock', tr).hidden = !o.manual;
+    $('[data-o="descrow"]', tr).hidden = !(o.item && !isKg);
+    $('[data-o="delta"]', tr).textContent = isKg && o.deltaC ? (o.deltaC < 0 ? '−' : '+') + fmtKg(Math.abs(o.deltaC)) : '';
+    $('[data-o="amount"]', tr).textContent = o.blank || !o.amountP ? '' : C.inr(o.amountP);
+    let sub = '';
+    if (o.item) sub = '<span class="ok">✓</span> ' + esc(o.item.name) + (isKg ? '' : ' · ' + esc(o.unit));
+    else if (ln.text.trim()) {
+      const r = C.resolveItem(ln.text, c.items);
+      sub = r.status === 'multi' ? '<span class="badtxt">Matches ' + r.candidates.length + ' items</span> · <a href="#" data-act="fixitem">choose</a>' : '<span class="badtxt">Not in the item master</span> · <a href="#" data-act="fixitem">fix in master</a>';
+    }
+    $('[data-o="sub"]', tr).innerHTML = sub;
+    let rs = '';
+    if (isKg && o.tier >= 0 && !o.blank) rs += '<span class="tier ' + (TIER_CLASS[o.tier] || 't4') + '" title="Rate tier on this bill: B is the lowest rate and is cut first">' + esc(o.tierLabel) + '</span>';
+    const sv = savedRate(b, o.item);
+    if (sv && isFinite(C.num(ln.rate)) && C.num(sv) !== C.num(ln.rate)) rs += ' <span class="hint">saved ' + esc(sv) + '</span>';
+    $('[data-o="rsub"]', tr).innerHTML = rs;
+  });
+  renderBillsBar(); renderPartyInfo(b, calc); renderSummary(calc, v);
+}
+function renderPartyInfo(b, calc) {
+  const box = $('#partyInfo'); if (!box) return;
+  const P = calc.party; let h = '';
+  if (P) {
+    h += '<span class="chip">' + esc(P.gstin || 'no GSTIN') + '</span>';
+    h += '<span class="chip">' + esc(P.state || C.stateFromGstin(P.gstin) || 'no state') + '</span>';
+    if (calc.inter) h += '<span class="chip info">Interstate · Igst</span>';
+    if (!(P.addr || '').trim()) h += '<span class="chip warn">address missing</span>';
+    if (!P.pin) h += '<span class="chip warn">pincode missing</span>';
+    if (!P.place) h += '<span class="chip warn">place missing</span>';
+    h += ' <a href="#" data-act="editparty">edit party</a>';
+  } else if (b.partyText.trim()) h = '<span class="badtxt">Not in the party master</span> · <a href="#" data-act="fixparty">fix in master</a>';
+  box.innerHTML = h;
+}
+function renderSummary(calc, v) {
+  const T = calc.totals, adj = calc.adj, card = $('#sumcard'); if (!card) return;
+  const row = (k, val, cls) => '<div class="kv ' + (cls || '') + '"><span>' + k + '</span><b>' + val + '</b></div>';
+  const tax = calc.inter ? row('Igst', rup(T.igst)) : row('Cgst', rup(T.cgst)) + row('Sgst', rup(T.sgst));
+  const weight = row('Standard weight', C.kgFmt(T.kgStd) + ' KG') + (adj.hasTarget ? row('Target', C.kgFmt(adj.targetC) + ' KG') : '') + row('Billed weight', C.kgFmt(T.kgFinal) + ' KG', adj.hasTarget && adj.diffC === 0 ? 'good' : '') + row('Cut from standard', T.kgReduced ? C.kgFmt(T.kgReduced) + ' KG' : '0.00 KG');
+  const readyOthers = A.bills.filter((x) => { if (x.exported) return false; const cc = C.calcBill(x, ctx()); return validate(x, cc).E.length === 0; });
+  const html = '<div class="sumgrid"><div class="box"><h3>Weight</h3>' + weight + '</div>' +
+    '<div class="box"><h3>Amount</h3>' + row('Taxable value', rup(T.taxable)) + tax + row('Round off', rup(T.roundoff)) + row('Bill total', rup(T.grand), 'total') + '</div>' +
+    '<div class="box msgs"><h3>Checks</h3>' +
+    (v.E.length ? '<ul class="errs">' + v.E.map((m) => '<li>' + esc(m) + '</li>').join('') + '</ul>' : '<p class="okline">✓ Ready to export</p>') +
+    (v.W.length ? '<ul class="warns">' + v.W.map((m) => '<li>' + esc(m) + '</li>').join('') + '</ul>' : '') +
+    '</div></div>' +
+    '<div class="actions end"><button class="btn primary" data-act="export"' + (v.E.length ? ' disabled' : '') + '>Export XML for this bill</button>' +
+    '<button class="btn" data-act="exportall"' + (readyOthers.length < 2 ? ' disabled' : '') + '>Export all ready bills (' + readyOthers.length + ') in one file</button></div>';
+  if (card.dataset.h !== html) { card.innerHTML = html; card.dataset.h = html; }  // keep the buttons in place when nothing changed, so a click that follows a field blur is not lost
+}
+function renderBillsBar() {
+  const bar = $('#billsbar'); if (!bar) return;
+  bar.innerHTML = A.bills.map((x, i) => {
+    const p = x.partyId && ctx().partiesById[x.partyId], short = (p ? p.name : x.partyText || 'No party').split(/\s+/).slice(0, 2).join(' ');
+    const no = billLabel(x);
+    return '<div class="chipbill' + (i === A.cur ? ' on' : '') + '"><button data-act="pick" data-i="' + i + '">' + esc(no) + ' · ' + esc(short) + (x.exported ? ' <span class="done">✓ exported</span>' : '') + '</button><button class="x" data-act="delbill" data-i="' + i + '" aria-label="Remove bill ' + esc(no) + '">×</button></div>';
+  }).join('') + '<button class="btn" data-act="newbill">+ New bill</button>';
+}
+
+// ---------- item / party matching for lines ----------
+function resolveLine(i) {
+  const b = bill(), ln = b.lines[i], r = C.resolveItem(ln.text, ctx().items);
+  if (r.status === 'ok') {
+    const it = r.item; ln.itemId = it.id;
+    if (it.unit === 'KG' && !ln.stdOvr && (ln.kgpc === '' || ln.kgpcAuto)) { ln.kgpc = it.kgpc || ''; ln.kgpcAuto = !!it.kgpc; }
+    if (ln.rate === '' || ln.rateAuto) { const sv = savedRate(b, it); if (sv !== '') { ln.rate = sv; ln.rateAuto = true; } }
+  } else ln.itemId = '';
+}
+function setParty(text) {
+  const b = bill(), r = C.resolveParty(text, ctx().parties);
+  if (r.status === 'ok') { b.partyId = r.party.id; b.partyText = r.party.name; } else { b.partyId = ''; b.partyText = text; }
+  b.lines.forEach((ln) => { if (ln.itemId && (ln.rateAuto || ln.rate === '')) { const sv = savedRate(b, ctx().itemsById[ln.itemId]); ln.rate = sv; ln.rateAuto = sv !== ''; } });
+}
+
+// ---------- events ----------
+function bindBuild() {
+  const main = $('#main');
+  main.addEventListener('input', (e) => {
+    if (A.tab !== 'build') return;
+    const t = e.target, b = bill();
+    if (t.dataset.b) { b[t.dataset.b] = t.value; if (t.dataset.b === 'vno') b.vnoAuto = false; if (t.dataset.b === 'target') { touchBill(); syncBill(); } return; }
+    if (t.dataset.f) {
+      const tr = t.closest('tr'), i = +tr.dataset.i, ln = b.lines[i], f = t.dataset.f;
+      if (f === 'kg') return;                                    // committed on change
+      ln[f] = t.value;
+      if (f === 'qty' || f === 'kgpc') { ln.stdOvr = false; ln.std = ''; if (f === 'kgpc') ln.kgpcAuto = false; }
+      if (f === 'std') { ln.stdOvr = t.value.trim() !== ''; }
+      if (f === 'rate') ln.rateAuto = false;
+      if (f === 'text') return;                                  // resolved on change
+      touchBill(); syncBill();
+    }
+  });
+  main.addEventListener('change', (e) => {
+    if (A.tab !== 'build') return;
+    const t = e.target, b = bill();
+    if (t.dataset.b) {
+      const k = t.dataset.b;
+      if (k === 'date') { const d = C.parseDate(t.value); if (d) { b.date = C.fmtDate(d); t.value = b.date; if (b.vnoAuto) { b.vno = nextVno(b.date, b.id); const vi = $('[data-b="vno"]'); if (vi) vi.value = b.vno; } } else b.date = t.value; }
+      else if (k === 'partyText') { setParty(t.value); t.value = b.partyText; }
+      else if (k === 'locId') { const l = SET().locations.find((x) => x.id === t.value); b.locId = t.value; if (l && b.godownAuto && l.godown) { b.godown = l.godown; const g = $('[data-b="godown"]'); if (g) g.value = b.godown; } }
+      else if (k === 'godown') { b.godown = t.value; b.godownAuto = false; }
+      else if (k === 'vehicle') { b.vehicle = C.normVehicle(t.value); t.value = b.vehicle; }
+      else if (k === 'target') { b.target = t.value.trim(); }
+      touchBill(); syncBill(); return;
+    }
+    if (t.dataset.f) {
+      const tr = t.closest('tr'), i = +tr.dataset.i, ln = b.lines[i], f = t.dataset.f;
+      if (f === 'text') { ln.text = t.value; resolveLine(i); }
+      else if (f === 'kg') {
+        const v = t.value.trim();
+        if (v === '') ln.kg = ''; else if (isFinite(C.num(v))) ln.kg = String(C.num(v)); else { toast('Billed KG must be a number.', 'err'); }
+      }
+      touchBill(); syncBill();
+    }
+  });
+  main.addEventListener('keydown', (e) => {
+    if (A.tab !== 'build' || e.key !== 'Enter') return;
+    const t = e.target; if (!t.dataset || !t.dataset.f) return;
+    if (t.dataset.f === 'kg') { t.blur(); return; }
+    const tr = t.closest('tr'), b = bill(), i = +tr.dataset.i;
+    if (t.dataset.f === 'rate' && i === b.lines.length - 1) { e.preventDefault(); t.blur(); addLine(true); }
+  });
+  main.addEventListener('click', (e) => {
+    const tabLink = e.target.closest('[data-tab]'); if (tabLink) { e.preventDefault(); setTab(tabLink.dataset.tab); return; }
+    const a = e.target.closest('[data-act]'); if (!a || A.tab !== 'build') return;
+    e.preventDefault();
+    const act = a.dataset.act, b = bill(), tr = a.closest('tr'), i = tr ? +tr.dataset.i : +a.dataset.i;
+    if (act === 'newbill') { A.bills.push(newBill()); A.cur = A.bills.length - 1; saveBills(); renderBuild(); }
+    else if (act === 'pick') { A.cur = i; saveBills(); renderBuild(); }
+    else if (act === 'delbill') removeBill(i);
+    else if (act === 'addline') addLine(true);
+    else if (act === 'delline') { b.lines.splice(i, 1); if (!b.lines.length) b.lines.push(blankLine()); touchBill(); renderBuild(); }
+    else if (act === 'unlock') { b.lines[i].kg = ''; touchBill(); syncBill(); }
+    else if (act === 'clearlines') { b.lines = [blankLine(), blankLine(), blankLine()]; b.target = ''; touchBill(); renderBuild(); }
+    else if (act === 'paste') openPasteDialog();
+    else if (act === 'xlsxbill') importBillExcel();
+    else if (act === 'fixitem') fixItemDialog(i);
+    else if (act === 'fixparty') fixPartyDialog();
+    else if (act === 'editparty') { const p = ctx().partiesById[b.partyId]; if (p) openPartyForm(p, null, () => renderBuild()); }
+    else if (act === 'export') exportBills([b]);
+    else if (act === 'exportall') exportBills(A.bills.filter((x) => !x.exported && validate(x, C.calcBill(x, ctx())).E.length === 0));
+  });
+}
+function addLine(focus) {
+  const b = bill(); b.lines.push(blankLine()); saveBills(); renderBuild();
+  if (focus) { const rows = $$('#lines tr'); const last = rows[rows.length - 1]; if (last) $('[data-f="text"]', last).focus(); }
+}
+async function removeBill(i) {
+  const x = A.bills[i], has = x.lines.some((l) => l.text || l.qty);
+  if (has && !x.exported && !(await confirmBox('Remove ' + (C.tallyNumbers(SET()) ? '' : 'bill ') + billLabel(x) + '? It has not been exported.', 'Remove', true))) return;
+  A.bills.splice(i, 1); if (!A.bills.length) A.bills.push(newBill()); A.cur = Math.min(A.cur, A.bills.length - 1); saveBills(); renderBuild();
+}
+
+// ---------- fix in master ----------
+function fixItemDialog(i) {
+  const b = bill(), ln = b.lines[i], text = ln.text.trim(), items = ctx().items.slice().sort((a, c2) => a.name.localeCompare(c2.name));
+  const r = C.resolveItem(text, items);
+  const list = r.status === 'multi' ? r.candidates : items;
+  modal({
+    title: 'Fix item: ' + text, wide: true,
+    html: '<p>“<b>' + esc(text) + '</b>” is not an exact item. Bills never create items. Choose the Tally item it means (this adds “' + esc(text) + '” as an alias so it matches next time), or create a new item.</p>' +
+      '<label>Find an item<input id="fxq" placeholder="Type to filter" autocomplete="off"></label><select id="fxl" size="9" class="listbox">' + list.map((it) => '<option value="' + esc(it.id) + '">' + esc(it.name) + '</option>').join('') + '</select>',
+    onOpen: (root) => {
+      const q = $('#fxq', root), sel = $('#fxl', root);
+      q.addEventListener('input', () => { const w = q.value.toLowerCase(); [...sel.options].forEach((o) => { o.hidden = w && !o.textContent.toLowerCase().includes(w); }); });
+    },
+    buttons: [{ label: 'Cancel', value: null },
+      { label: 'Create new item…', onClick: (close) => { close(); openItemForm(null, { name: text, family: BBTools.inferFamily(text) }, (it) => { ln.itemId = it.id; ln.text = text; resolveLine(i); renderBuild(); }); } },
+      { label: 'Use selected item', kind: 'primary', onClick: (close, root) => {
+        const id = $('#fxl', root).value; if (!id) { toast('Select an item first.', 'err'); return; }
+        const it = ctx().itemsById[id]; it.aliases = [it.aliases, text].filter(Boolean).join('; '); it.u = Date.now(); saveData(); close(); resolveLine(i); renderBuild(); toast('“' + text + '” now means ' + it.name);
+      } }],
+  });
+}
+function fixPartyDialog() {
+  const b = bill(), text = b.partyText.trim(), parties = ctx().parties.slice().sort((a, c2) => a.name.localeCompare(c2.name));
+  modal({
+    title: 'Fix party: ' + text, wide: true,
+    html: '<p>“<b>' + esc(text) + '</b>” is not in the party master. Choose the right party (adds “' + esc(text) + '” as an alias), or create a new party.</p><label>Find a party<input id="fxq" autocomplete="off"></label><select id="fxl" size="9" class="listbox">' + parties.map((p) => '<option value="' + esc(p.id) + '">' + esc(p.name) + '</option>').join('') + '</select>',
+    onOpen: (root) => { const q = $('#fxq', root), sel = $('#fxl', root); q.addEventListener('input', () => { const w = q.value.toLowerCase(); [...sel.options].forEach((o) => { o.hidden = w && !o.textContent.toLowerCase().includes(w); }); }); },
+    buttons: [{ label: 'Cancel', value: null },
+      { label: 'Create new party…', onClick: (close) => { close(); openPartyForm(null, { name: text.toUpperCase() }, (p) => { setParty(p.name); renderBuild(); }); } },
+      { label: 'Use selected party', kind: 'primary', onClick: (close, root) => {
+        const id = $('#fxl', root).value; if (!id) { toast('Select a party first.', 'err'); return; }
+        const p = ctx().partiesById[id]; p.aliases = [p.aliases, text].filter(Boolean).join('; '); p.u = Date.now(); saveData(); close(); setParty(p.name); renderBuild();
+      } }],
+  });
+}
+
+// ---------- paste / Excel -> bill ----------
+function openPasteDialog(prefill) {
+  modal({
+    title: 'Paste from sheet', wide: true,
+    html: '<p>Copy the rows from Excel or Google Sheets and paste them here. Columns in order: <b>Item · Pcs · Kg per pc · Total kg · Rate</b>. A first row with the party and date (for example “Mahavir trade links 23.10.26”) is read too. A number alone on a row after the items is taken as the dispatch weight.</p>' +
+      '<textarea id="pstx" rows="9" spellcheck="false" placeholder="Paste here"></textarea><div id="pstprev" class="prev"></div>',
+    buttons: [{ label: 'Cancel', value: null }, { label: 'Use these rows', kind: 'primary', id: 'pstok', onClick: (close, root) => { const r = BBTools.parseSheet($('#pstx', root).value); if (!r.lines.length) { toast('No item rows found.', 'err'); return; } close(); applySheet(r); } }],
+    onOpen: (root) => {
+      const ta = $('#pstx', root), pv = $('#pstprev', root);
+      const show = () => {
+        const r = BBTools.parseSheet(ta.value); if (!ta.value.trim()) { pv.innerHTML = ''; return; }
+        const pr = r.partyText ? C.resolveParty(r.partyText, ctx().parties) : { status: 'blank' };
+        pv.innerHTML = '<p class="sub">Party: <b>' + esc(r.partyText || '—') + '</b> ' + (pr.status === 'ok' ? '<span class="ok">✓ found</span>' : r.partyText ? '<span class="badtxt">not found</span>' : '') + ' · Date: <b>' + esc(r.date || '—') + '</b> · Dispatch weight: <b>' + esc(r.target || '—') + '</b> · Basic rate: <b>' + esc(r.baseRate || '—') + '</b></p>' +
+          '<table class="mini"><thead><tr><th>Item</th><th>Matches</th><th class="r">Pcs</th><th class="r">Kg/pc</th><th class="r">Kg</th><th class="r">Rate</th></tr></thead><tbody>' +
+          r.lines.map((l) => { const m = C.resolveItem(l.text, ctx().items); return '<tr><td>' + esc(l.text) + '</td><td>' + (m.status === 'ok' ? '<span class="ok">✓</span> ' + esc(m.item.name) : '<span class="badtxt">no match</span>') + '</td><td class="r">' + esc(l.qty) + '</td><td class="r">' + esc(l.kgpc) + '</td><td class="r">' + esc(l.kg) + '</td><td class="r">' + esc(l.rate) + '</td></tr>'; }).join('') + '</tbody></table>';
+      };
+      ta.addEventListener('input', show); if (prefill) { ta.value = prefill; show(); }
+    },
+  });
+}
+function applySheet(r) {
+  let b = bill();
+  if (b.lines.some((l) => l.text || l.qty)) { A.bills.push(newBill()); A.cur = A.bills.length - 1; b = bill(); }
+  if (r.date) { b.date = r.date; if (b.vnoAuto) b.vno = nextVno(b.date, b.id); }
+  if (r.partyText) setParty(r.partyText);
+  if (r.target) b.target = String(r.target);
+  b.lines = r.lines.map((l) => {
+    const ln = blankLine(); ln.text = l.text; ln.qty = l.qty; ln.kgpc = l.kgpc; ln.rate = l.rate || r.baseRate || '';
+    const kg = C.num(l.kg), q = C.num(l.qty), k = C.num(l.kgpc);
+    if (isFinite(kg) && !(isFinite(q) && isFinite(k) && Math.abs(q * k - kg) < 0.005)) { ln.std = String(kg); ln.stdOvr = true; }
+    return ln;
+  });
+  b.lines.forEach((ln, i) => { const rate = ln.rate, kgpc = ln.kgpc; resolveLine(i); if (rate) { ln.rate = rate; ln.rateAuto = false; } if (kgpc) { ln.kgpc = kgpc; ln.kgpcAuto = false; } });
+  saveBills(); renderBuild(); toast('Loaded ' + b.lines.length + ' lines' + (r.target ? ' with dispatch weight ' + r.target : '') + '.');
+}
+async function importBillExcel() {
+  const f = await pickFile('.xlsx,.xls,.csv'); if (!f) return;
+  try { openPasteDialog(await sheetToTsv(f)); } catch (e) { toast(e.message, 'err'); }
+}
+
+// ---------- export ----------
+async function exportBills(list) {
+  if (!list.length) return;
+  const c = ctx(), vouchers = [], calcs = [];
+  for (const b of list) {
+    const calc = C.calcBill(b, c), v = validate(b, calc);
+    if (v.E.length) { toast((C.tallyNumbers(SET()) ? '' : 'Bill ') + billLabel(b) + ' has problems: ' + v.E[0], 'err'); return; }
+    const dup = v.W.find((w) => /already exported/.test(w));
+    if (dup && !(await confirmBox(dup + '\n\nExport anyway?', 'Export anyway', true))) return;
+    vouchers.push(BBXml.voucher(b, calc, c)); calcs.push(calc);
+  }
+  const xml = BBXml.envelope(vouchers, c), auto = C.tallyNumbers(SET()), now = Date.now();
+  let name;
+  if (list.length === 1) name = BBXml.fileName(list[0], calcs[0], SET(), now);
+  else if (auto) { const t = new Date(now), p2 = (n) => String(n).padStart(2, '0'); name = 'Sales_' + C.todayDMY() + '_' + list.length + '-bills_' + p2(t.getHours()) + p2(t.getMinutes()) + '.xml'; }
+  else { const f = C.vnoParse(list[0].vno), l = C.vnoParse(list[list.length - 1].vno); name = f && l ? 'Sales_' + f.prefix.replace(/\W+/g, '_') + String(f.n).padStart(4, '0') + '-to-' + String(l.n).padStart(4, '0') + '_' + f.fy + '.xml' : 'Sales_BB_batch.xml'; }
+  download(name, xml, 'application/xml');
+  const S = SET();
+  list.forEach((b, k) => {
+    const calc = calcs[k], P = calc.party;
+    DATA.log.unshift({ id: BBData.newId('x'), ts: now, user: A.user || '', voucher: auto ? '' : b.vno, party: P.name, date: b.date, kg: calc.totals.kgFinal, taxable: calc.totals.taxable, total: calc.totals.grand, file: name });
+    b.exported = true;
+    const p = !auto && C.vnoParse(b.vno); if (p) S.numbering.next[p.fy] = Math.max(S.numbering.next[p.fy] || 0, p.n + 1);
+    if (b.vehicle) { S.vehicles = (S.vehicles || []).filter((v) => v !== b.vehicle).concat(b.vehicle).slice(-30); }
+    calc.lines.forEach((o) => { if (!o.blank && o.item && o.rateP > 0) { P.rates = P.rates || {}; P.rates[o.item.id] = C.fixed(o.rateP); } });
+    P.u = now;
+  });
+  S._u = now; saveData(); saveBills(); renderBuild();
+  toast('Exported ' + list.length + ' bill' + (list.length > 1 ? 's' : '') + ' as ' + name + (auto ? '. Tally gives the voucher number on import.' : ''));
+}
+
+/* --- app_masters.js --- */
+/* ===== Item master, Party master, Settings ===== */
+const FAMILIES = [['sheet', 'Sheet mesh'], ['weldmesh', 'Weldmesh (rolls)'], ['wire', 'Wire'], ['barbed', 'Barbed wire'], ['chainlink', 'Chainlink'], ['other', 'Other']];
+const famName = (f) => (FAMILIES.find((x) => x[0] === f) || [0, f || ''])[1];
+const UNITS = ['KG', 'sq.ft', 'PCS'];
+const TAXSRC = [['group', 'Stock group'], ['item', 'Stock item'], ['none', 'Leave to Tally']];
+
+function sel(name, opts, cur) { return '<select name="' + name + '">' + opts.map((o) => { const v = Array.isArray(o) ? o[0] : o, l = Array.isArray(o) ? o[1] : o; return '<option value="' + esc(v) + '"' + (v === cur ? ' selected' : '') + '>' + esc(l) + '</option>'; }).join('') + '</select>'; }
+const fld = (label, inner, cls, hint) => '<label class="' + (cls || '') + '">' + label + inner + (hint ? '<span class="sub">' + hint + '</span>' : '') + '</label>';
+const inp = (name, val, extra) => '<input name="' + name + '" value="' + esc(val == null ? '' : val) + '" autocomplete="off" ' + (extra || '') + '>';
+const formVals = (root) => { const o = {}; $$('[name]', root).forEach((e) => { o[e.name] = e.value.trim(); }); return o; };
+const dupName = (list, name, selfId) => list.some((x) => !x.del && x.id !== selfId && C.norm(x.name) === C.norm(name));
+
+// ---------- item form ----------
+function openItemForm(item, prefill, onSaved) {
+  const S = SET(), it = Object.assign({ name: '', family: 'weldmesh', unit: 'KG', taxSource: 'group', group: '', hsn: S.hsnDefault, hsnDesc: '', gst: S.gstDefault, kgpc: '', rate: '', aliases: '' }, item || {}, prefill || {});
+  modal({
+    title: item ? 'Edit item' : 'New item', wide: true,
+    html: '<div class="grid g3 form">' +
+      fld('Name exactly as in Tally', inp('name', it.name), 'span3', 'Copy it from Tally. Capitalisation matters (“GI Sheet Mesh” and “Gi Weldmesh” are different names).') +
+      fld('Family', sel('family', FAMILIES, it.family)) + fld('Unit', sel('unit', UNITS, it.unit)) + fld('GST %', inp('gst', it.gst, 'inputmode="decimal"')) +
+      fld('Tax details from', sel('taxSource', TAXSRC, it.taxSource), '', 'Where Tally takes GST and HSN from for this item') + fld('Stock group', inp('group', it.group), '', 'Used when “Stock group” is chosen') + fld('HSN code', inp('hsn', it.hsn)) +
+      fld('HSN description', inp('hsnDesc', it.hsnDesc)) + fld('Standard kg per piece / roll', inp('kgpc', it.kgpc, 'inputmode="decimal"'), '', 'Fills the Kg per pc column on a bill') + fld('Usual rate ₹', inp('rate', it.rate, 'inputmode="decimal"'), '', 'Used only if the party has no saved rate for it') +
+      fld('Other names (separate with ;)', inp('aliases', it.aliases), 'span3', 'Short codes used on dispatch sheets, e.g. “40x40 3mm 12x4ft; 40x40 3mm 12x4”') + '</div><p class="err" id="ferr"></p>',
+    buttons: [{ label: 'Cancel', value: null }].concat(item ? [{ label: 'Delete', kind: 'danger', onClick: async (close) => { if (await confirmBox('Delete “' + item.name + '”? Old exported bills are not affected.', 'Delete', true)) { item.del = true; item.u = Date.now(); saveData(); close(); refreshTab(); } } }] : [])
+      .concat([{ label: 'Save', kind: 'primary', onClick: (close, root) => {
+        const v = formVals(root), err = $('#ferr', root);
+        if (!v.name) return (err.textContent = 'Enter the item name.');
+        if (dupName(DATA.items, v.name, item && item.id)) return (err.textContent = 'An item with this name already exists.');
+        if (v.gst !== '' && !isFinite(C.num(v.gst))) return (err.textContent = 'GST % must be a number.');
+        if (v.kgpc !== '' && !(C.num(v.kgpc) > 0)) return (err.textContent = 'Kg per piece must be a positive number.');
+        if (v.rate !== '' && !(C.num(v.rate) > 0)) return (err.textContent = 'Rate must be a positive number.');
+        if (v.taxSource === 'group' && !v.group) return (err.textContent = 'Enter the stock group, or choose another tax source.');
+        const rec = Object.assign({}, v, { gst: v.gst === '' ? S.gstDefault : C.num(v.gst), u: Date.now() });
+        let target = item;
+        if (item) Object.assign(item, rec); else { target = Object.assign({ id: BBData.newId('i') }, rec); DATA.items.push(target); }
+        saveData(); close(); if (onSaved) onSaved(target); refreshTab();
+      } }]),
+  });
+}
+
+// ---------- party form ----------
+function openPartyForm(party, prefill, onSaved) {
+  const p = Object.assign({ name: '', gstin: '', addr: '', pin: '', place: '', state: '', aliases: '', addrType: '', rates: {} }, party || {}, prefill || {});
+  const rates = Object.assign({}, p.rates || {}), items = ctx().items.slice().sort((a, b) => a.name.localeCompare(b.name));
+  const rateRows = () => Object.keys(rates).filter((id) => ctx().itemsById[id]).map((id) => '<div class="raterow" data-id="' + esc(id) + '"><span>' + esc(ctx().itemsById[id].name) + '</span><input data-rr value="' + esc(rates[id]) + '" inputmode="decimal" aria-label="Rate"><button class="icon" data-rdel aria-label="Remove rate">×</button></div>').join('') || '<p class="sub">No saved rates yet. They are saved automatically when you export a bill.</p>';
+  modal({
+    title: party ? 'Edit party' : 'New party', wide: true,
+    html: '<div class="grid g3 form">' +
+      fld('Name exactly as in Tally', inp('name', p.name), 'span2') + fld('GSTIN', inp('gstin', p.gstin, 'style="text-transform:uppercase" maxlength="15"'), '', 'State fills in from the GSTIN') +
+      fld('Address (one line per row; Tally takes up to 4)', '<textarea name="addr" rows="4">' + esc(p.addr) + '</textarea>', 'span2') +
+      '<div class="stack">' + fld('Pincode', inp('pin', p.pin, 'inputmode="numeric" maxlength="6"')) + fld('Place (bill-to and ship-to)', inp('place', p.place)) + '</div>' +
+      fld('State (as in Tally)', inp('state', p.state)) + fld('Tally address type (optional)', inp('addrType', p.addrType), '', 'e.g. Warehouse, only if the party uses a named address') + fld('Other names (separate with ;)', inp('aliases', p.aliases)) +
+      '<div class="span3"><h4>Saved rates (₹ per KG / unit)</h4><div id="rates">' + rateRows() + '</div><div class="raterow add"><select id="rnew"><option value="">Add a rate for an item…</option>' + items.map((i) => '<option value="' + esc(i.id) + '">' + esc(i.name) + '</option>').join('') + '</select></div></div></div><p class="err" id="ferr"></p>',
+    onOpen: (root) => {
+      const g = $('[name=gstin]', root), st = $('[name=state]', root);
+      g.addEventListener('change', () => { g.value = g.value.toUpperCase().replace(/\s/g, ''); if (!st.value && C.stateFromGstin(g.value)) st.value = C.stateFromGstin(g.value); });
+      const box = $('#rates', root);
+      box.addEventListener('input', (e) => { if (e.target.hasAttribute('data-rr')) rates[e.target.closest('.raterow').dataset.id] = e.target.value; });
+      box.addEventListener('click', (e) => { if (e.target.hasAttribute('data-rdel')) { e.preventDefault(); delete rates[e.target.closest('.raterow').dataset.id]; box.innerHTML = rateRows(); } });
+      $('#rnew', root).addEventListener('change', (e) => { if (e.target.value) { rates[e.target.value] = rates[e.target.value] || ''; box.innerHTML = rateRows(); e.target.value = ''; const last = $$('[data-rr]', box).pop(); if (last) last.focus(); } });
+    },
+    buttons: [{ label: 'Cancel', value: null }].concat(party ? [{ label: 'Delete', kind: 'danger', onClick: async (close) => { if (await confirmBox('Delete “' + party.name + '”?', 'Delete', true)) { party.del = true; party.u = Date.now(); saveData(); close(); refreshTab(); } } }] : [])
+      .concat([{ label: 'Save', kind: 'primary', onClick: (close, root) => {
+        const v = formVals(root), err = $('#ferr', root); delete v[''];
+        if (!v.name) return (err.textContent = 'Enter the party name.');
+        if (dupName(DATA.parties, v.name, party && party.id)) return (err.textContent = 'A party with this name already exists.');
+        v.gstin = (v.gstin || '').toUpperCase().replace(/\s/g, '');
+        if (!v.state && v.gstin) v.state = C.stateFromGstin(v.gstin);
+        const clean = {}; Object.keys(rates).forEach((id) => { if (C.num(rates[id]) > 0) clean[id] = String(rates[id]).trim(); });
+        const rec = Object.assign({}, v, { rates: clean, u: Date.now() }); delete rec.rnew;
+        let target = party;
+        if (party) Object.assign(party, rec); else { target = Object.assign({ id: BBData.newId('p') }, rec); DATA.parties.push(target); }
+        saveData(); close(); if (onSaved) onSaved(target); refreshTab();
+      } }]),
+  });
+}
+
+// ---------- master tables ----------
+function renderItems() {
+  const q = A.q.items.toLowerCase(), all = ctx().items;
+  const rows = all.filter((i) => !q || (i.name + ' ' + (i.aliases || '') + ' ' + (i.group || '')).toLowerCase().includes(q)).sort((a, b) => a.name.localeCompare(b.name));
+  const dups = new Set(); const seen = {}; all.forEach((i) => { const k = C.norm(i.name); if (seen[k]) { dups.add(k); } seen[k] = 1; });
+  $('#main').innerHTML = '<section class="card"><div class="cardhead"><h2>Item master <span class="count">' + all.length + '</span></h2><div class="actions"><input class="search" id="q" placeholder="Search items" value="' + esc(A.q.items) + '" aria-label="Search items">' +
+    '<button class="btn primary" data-act="newitem">+ New item</button><button class="btn" data-act="importitems">Import…</button></div></div>' +
+    (dups.size ? '<p class="warnline">Some names appear twice (' + [...dups].slice(0, 3).map(esc).join(', ') + '…). Delete the extra copies so matching stays exact.</p>' : '') +
+    '<div class="tablewrap"><table class="grid-t"><thead><tr><th>Name</th><th>Family</th><th>Unit</th><th>Tax from</th><th>HSN</th><th class="r">GST</th><th class="r">Kg/pc</th><th class="r">Rate</th><th>Other names</th></tr></thead><tbody>' +
+    (rows.map((i) => '<tr data-id="' + esc(i.id) + '" tabindex="0"><td>' + esc(i.name) + '</td><td>' + esc(famName(i.family)) + '</td><td>' + esc(i.unit) + '</td><td>' + (i.taxSource === 'group' ? esc(i.group) : i.taxSource === 'item' ? 'item' : '—') + '</td><td>' + esc(i.hsn) + '</td><td class="r">' + esc(i.gst) + '%</td><td class="r">' + esc(i.kgpc) + '</td><td class="r">' + esc(i.rate) + '</td><td class="muted">' + esc(i.aliases) + '</td></tr>').join('') || '<tr><td colspan="9" class="empty">No items. Use “+ New item” or “Import…”.</td></tr>') + '</tbody></table></div></section>';
+}
+function renderParties() {
+  const q = A.q.parties.toLowerCase(), all = ctx().parties;
+  const rows = all.filter((p) => !q || (p.name + ' ' + (p.aliases || '') + ' ' + (p.gstin || '') + ' ' + (p.place || '')).toLowerCase().includes(q)).sort((a, b) => a.name.localeCompare(b.name));
+  $('#main').innerHTML = '<section class="card"><div class="cardhead"><h2>Party master <span class="count">' + all.length + '</span></h2><div class="actions"><input class="search" id="q" placeholder="Search parties" value="' + esc(A.q.parties) + '" aria-label="Search parties">' +
+    '<button class="btn primary" data-act="newparty">+ New party</button><button class="btn" data-act="importparties">Import…</button></div></div>' +
+    '<div class="tablewrap"><table class="grid-t"><thead><tr><th>Name</th><th>GSTIN</th><th>State</th><th>Place</th><th>Pin</th><th class="r">Saved rates</th><th>Other names</th><th></th></tr></thead><tbody>' +
+    (rows.map((p) => { const miss = [!(p.addr || '').trim() && 'address', !p.pin && 'pincode', !p.gstin && 'GSTIN'].filter(Boolean); return '<tr data-id="' + esc(p.id) + '" tabindex="0"><td>' + esc(p.name) + '</td><td>' + esc(p.gstin) + '</td><td>' + esc(p.state) + '</td><td>' + esc(p.place) + '</td><td>' + esc(p.pin) + '</td><td class="r">' + Object.keys(p.rates || {}).length + '</td><td class="muted">' + esc(p.aliases) + '</td><td>' + (miss.length ? '<span class="chip warn">' + esc(miss.join(', ')) + ' missing</span>' : '') + '</td></tr>'; }).join('') || '<tr><td colspan="8" class="empty">No parties. Use “+ New party” or “Import…”.</td></tr>') + '</tbody></table></div></section>';
+}
+function bindMasters() {
+  const main = $('#main');
+  main.addEventListener('input', (e) => {
+    if (e.target.id !== 'q' || (A.tab !== 'items' && A.tab !== 'parties')) return;
+    A.q[A.tab] = e.target.value; const pos = e.target.selectionStart; (A.tab === 'items' ? renderItems : renderParties)(); const q = $('#q'); q.focus(); q.setSelectionRange(pos, pos);
+  });
+  const open = (e) => {
+    if (A.tab !== 'items' && A.tab !== 'parties') return;
+    const tr = e.target.closest('tr[data-id]'); if (!tr) return;
+    if (A.tab === 'items') openItemForm(ctx().items.find((i) => i.id === tr.dataset.id)); else openPartyForm(ctx().parties.find((p) => p.id === tr.dataset.id));
+  };
+  main.addEventListener('click', (e) => {
+    if (A.tab !== 'items' && A.tab !== 'parties') return;
+    const a = e.target.closest('[data-act]');
+    if (a) {
+      const act = a.dataset.act;
+      if (act === 'newitem') openItemForm(null); else if (act === 'newparty') openPartyForm(null);
+      else if (act === 'importitems') openImportDialog('items'); else if (act === 'importparties') openImportDialog('parties');
+      return;
+    }
+    open(e);
+  });
+  main.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.matches && e.target.matches('tr[data-id]')) open(e); });
+}
+
+// ---------- import into masters (pasted text or Excel/CSV) ----------
+function openImportDialog(kind) {
+  const isItems = kind === 'items';
+  modal({
+    title: isItems ? 'Import items' : 'Import parties', wide: true,
+    html: '<p>Paste the table from Excel (first row = column names), or choose an Excel/CSV file. ' + (isItems ? 'Columns understood: Name, Unit, Stock Group, HSN, GST, Kg per pc, Rate, Aliases (and Family, HSN Description, Tax Source).' : 'Columns understood: Name, GSTIN, Address (or Address1 to Address4), Pincode, Place, State, Aliases, Address Type.') + ' Rows whose name already exists update that record; nothing is deleted.</p>' +
+      '<div class="actions"><button class="btn" id="impfile">Choose Excel / CSV file…</button></div><textarea id="imptx" rows="8" spellcheck="false" placeholder="Paste here"></textarea><div id="impprev" class="prev"></div>',
+    buttons: [{ label: 'Cancel', value: null }, { label: 'Import', kind: 'primary', onClick: (close, root) => {
+      const recs = parseImport(isItems, $('#imptx', root).value); if (!recs) { toast('Could not find a “Name” column in the first row.', 'err'); return; }
+      const n = applyImport(isItems, recs); close(); toast(n.added + ' added, ' + n.updated + ' updated.'); refreshTab();
+    } }],
+    onOpen: (root) => {
+      const ta = $('#imptx', root), pv = $('#impprev', root);
+      const show = () => { if (!ta.value.trim()) { pv.innerHTML = ''; return; } const r = parseImport(isItems, ta.value); pv.innerHTML = r ? '<p class="okline">✓ ' + r.length + ' row(s) found.</p>' : '<p class="errs">No “Name” column found in the first row.</p>'; };
+      ta.addEventListener('input', show);
+      $('#impfile', root).addEventListener('click', async () => { const f = await pickFile('.xlsx,.xls,.csv'); if (!f) return; try { ta.value = await sheetToTsv(f); show(); } catch (e) { toast(e.message, 'err'); } });
+    },
+  });
+}
+function parseImport(isItems, text) { return BBTools.parseTable(BBTools.textToRows(text), isItems ? BBTools.ITEM_COLS : BBTools.PARTY_COLS); }
+function applyImport(isItems, recs) {
+  const list = isItems ? DATA.items : DATA.parties, now = Date.now(); let added = 0, updated = 0;
+  recs.forEach((r) => {
+    if (!r.name) return;
+    const rec = isItems ? BBTools.toItem(r, SET()) : BBTools.toParty(r);
+    const hit = list.find((x) => !x.del && C.norm(x.name) === C.norm(r.name));
+    if (hit) { Object.keys(rec).forEach((k) => { if (rec[k] !== '' && rec[k] != null) hit[k] = rec[k]; }); hit.u = now; updated++; }
+    else { list.push(Object.assign({ id: BBData.newId(isItems ? 'i' : 'p'), u: now }, rec, isItems ? {} : { rates: {} })); added++; }
+  });
+  saveData(); return { added, updated };
+}
+
+// ---------- settings ----------
+function pathGet(o, p) { return p.split('.').reduce((x, k) => (x == null ? x : x[k]), o); }
+function pathSet(o, p, v) { const ks = p.split('.'), last = ks.pop(); const t = ks.reduce((x, k) => (x[k] = x[k] || {}), o); t[last] = v; }
+function renderSettings() {
+  const S = SET(), fy = fyForDate(C.todayDMY()), fys = [...new Set(Object.keys(S.numbering.next).concat(fy))].sort();
+  const s = (path, label, extra, hint, cls) => fld(label, '<input data-s="' + path + '" value="' + esc(pathGet(S, path)) + '" autocomplete="off" ' + (extra || '') + '>', cls, hint);
+  const rates = Object.keys(S.salesLedgers).sort((a, b) => a - b);
+  $('#main').innerHTML =
+    '<section class="card"><h2>Company and Tally names</h2><div class="grid g3 form">' +
+    s('company', 'Company name in Tally', '', 'Must match exactly. It changes with the financial year, so check it every April.', 'span3') +
+    s('cmpGstin', 'Company GSTIN') + s('cmpState', 'Company state') + s('enteredBy', 'Entered by (initials)', '', 'Shown in Tally as the voucher creator') +
+    s('ledgers.cgst', 'Cgst ledger') + s('ledgers.sgst', 'Sgst ledger') + s('ledgers.igst', 'Igst ledger') + s('ledgers.round', 'Round-off ledger') + s('hsnDefault', 'Default HSN code') + s('gstDefault', 'Default GST %', 'inputmode="decimal"') +
+    '<div class="span3"><h4>Sales ledger by GST rate</h4>' + rates.map((r) => '<div class="raterow"><span>' + esc(r) + '% sales</span><input data-sl="' + esc(r) + '" value="' + esc(S.salesLedgers[r]) + '" aria-label="Sales ledger for ' + esc(r) + ' percent"></div>').join('') +
+    '<div class="raterow add"><input id="slrate" placeholder="GST % (e.g. 5)" inputmode="decimal" aria-label="New GST rate"><input id="slname" placeholder="Ledger name in Tally" aria-label="New sales ledger"><button class="btn" data-act="addsl">Add</button></div><p class="sub">Interstate sales use the same sales ledger plus the Igst ledger (as in the Tamil Nadu bill).</p></div>' +
+    '</div></section>' +
+    '<section class="card"><h2>Voucher numbers</h2><div class="grid g3 form">' +
+    fld('Who numbers the voucher', sel('', [['tally', 'Tally, on import (voucher type set to Automatic)'], ['tool', 'This tool (number written in the XML)']], S.numbering.mode).replace('<select name=""', '<select data-s="numbering.mode"'), 'span3',
+      C.tallyNumbers(S) ? 'The XML has no voucher number, so Tally gives the next one in the Sales series. The bill-wise reference is left for Tally too, so the bill shows as On Account in the party\'s outstanding until you set the reference in Tally.' : 'The XML carries the number, and it is also used as the bill-wise reference.') +
+    (C.tallyNumbers(S) ? '</div></section>' : s('numbering.prefix', 'Prefix', '', 'The number is written as prefix + number + / + year, e.g. BB/0694/26-27') + s('numbering.width', 'Digits', 'inputmode="numeric"') +
+    '<div class="span3"><h4>Next number</h4>' + fys.map((f) => '<div class="raterow"><span>Year ' + esc(f) + (f === fy ? ' (this year)' : '') + '</span><input data-nx="' + esc(f) + '" value="' + esc(S.numbering.next[f] || '') + '" inputmode="numeric" placeholder="1" aria-label="Next voucher number for ' + esc(f) + '"></div>').join('') +
+    '<p class="sub">The next number moves forward by itself each time a bill is exported. The new bill always takes the next free number.</p></div></div></section>') +
+    '<section class="card"><h2>Rounding and weight rule</h2><div class="grid g3 form">' +
+    fld('Line amount rounding', sel('', [['half', 'Half up (nearest paisa)'], ['up', 'Always up']], S.lineRound).replace('<select name=""', '<select data-s="lineRound"'), '', 'Only matters when weight × rate has a fraction of a paisa') +
+    s('adjStep', 'Weight step (KG)', 'inputmode="decimal"', 'Cuts are made in multiples of this, e.g. 0.05') + s('adjMaxPct', 'Largest cut per line (%)', 'inputmode="decimal"', 'Past this, the next rate tier is used') +
+    fld('Spread the cut', sel('', [['even', 'Evenly across the lowest-rate lines'], ['fill', 'Few lines, largest first']], S.adjMode).replace('<select name=""', '<select data-s="adjMode"'), 'span2') + '</div></section>' +
+    '<section class="card"><div class="cardhead"><h2>Dispatch locations</h2><button class="btn" data-act="newloc">+ New location</button></div><div class="tablewrap"><table class="grid-t"><thead><tr><th>Name</th><th>Address</th><th>Pin</th><th>Place</th><th>Address type</th><th>Default godown</th></tr></thead><tbody>' +
+    S.locations.map((l) => '<tr data-loc="' + esc(l.id) + '" tabindex="0"><td>' + esc(l.name) + '</td><td class="muted">' + esc((l.addr || '').split('\n').join(', ')) + '</td><td>' + esc(l.pin) + '</td><td>' + esc(l.place) + '</td><td>' + esc(l.addrType) + '</td><td>' + esc(l.godown) + '</td></tr>').join('') + '</tbody></table></div>' +
+    '<h4>Godowns (names as in Tally, one per line)</h4><textarea data-gd rows="3">' + esc(S.godowns.join('\n')) + '</textarea></section>';
+}
+function openLocForm(loc) {
+  const l = Object.assign({ id: '', name: '', addr: '', pin: '', place: '', addrType: '', godown: SET().godowns[0] || '' }, loc || {});
+  modal({
+    title: loc ? 'Edit dispatch location' : 'New dispatch location', wide: true,
+    html: '<div class="grid g3 form">' + fld('Name (for the list)', inp('name', l.name), 'span3') + fld('Address lines (one per row)', '<textarea name="addr" rows="4">' + esc(l.addr) + '</textarea>', 'span3') + fld('Pincode', inp('pin', l.pin)) + fld('Place', inp('place', l.place)) + fld('Tally address type (optional)', inp('addrType', l.addrType), '', 'Only if Tally names this address, e.g. BEST BOND-2') +
+      fld('Default godown', sel('godown', SET().godowns, l.godown), 'span3') + '</div><p class="err" id="ferr"></p>',
+    buttons: [{ label: 'Cancel', value: null }].concat(loc && SET().locations.length > 1 ? [{ label: 'Delete', kind: 'danger', onClick: (close) => { SET().locations = SET().locations.filter((x) => x.id !== l.id); touchSettings(); close(); renderSettings(); } }] : [])
+      .concat([{ label: 'Save', kind: 'primary', onClick: (close, root) => {
+        const v = formVals(root), err = $('#ferr', root); if (!v.name || !v.addr) return (err.textContent = 'Enter a name and the address.');
+        if (loc) Object.assign(SET().locations.find((x) => x.id === l.id), v); else SET().locations.push(Object.assign({ id: BBData.newId('l') }, v));
+        touchSettings(); close(); renderSettings();
+      } }]),
+  });
+}
+function bindSettings() {
+  const main = $('#main');
+  main.addEventListener('change', (e) => {
+    if (A.tab !== 'settings') return;
+    const t = e.target, S = SET();
+    if (t.dataset.s) {
+      let v = t.value.trim(); const p = t.dataset.s;
+      if (['gstDefault', 'adjStep', 'adjMaxPct', 'numbering.width'].includes(p)) { const n = C.num(v); if (!(n > 0)) { toast('Enter a number above zero.', 'err'); t.value = pathGet(S, p); return; } v = n; }
+      pathSet(S, p, v);
+    } else if (t.dataset.sl) { S.salesLedgers[t.dataset.sl] = t.value.trim(); }
+    else if (t.dataset.nx !== undefined) { const n = parseInt(t.value, 10); if (n > 0) S.numbering.next[t.dataset.nx] = n; else delete S.numbering.next[t.dataset.nx]; }
+    else if (t.hasAttribute('data-gd')) { S.godowns = t.value.split(/\r?\n/).map((x) => x.trim()).filter(Boolean); }
+    else return;
+    touchSettings(); toast('Saved');
+    if (t.dataset.s === 'numbering.mode') renderSettings();
+  });
+  main.addEventListener('click', (e) => {
+    if (A.tab !== 'settings') return;
+    const a = e.target.closest('[data-act]'), tr = e.target.closest('tr[data-loc]');
+    if (a && a.dataset.act === 'addsl') {
+      const r = C.num($('#slrate').value), n = $('#slname').value.trim(); if (!(r > 0) || !n) { toast('Enter the GST % and the ledger name.', 'err'); return; }
+      SET().salesLedgers[String(r)] = n; touchSettings(); renderSettings();
+    } else if (a && a.dataset.act === 'newloc') openLocForm(null);
+    else if (tr) openLocForm(SET().locations.find((l) => l.id === tr.dataset.loc));
+  });
+}
+
+/* --- app_cloud.js --- */
+/* ===== Cloud & Backup, Export log, login screen ===== */
+const cloudUrl = () => (LS.get(KEY.url, '') || CLOUD_URL || '').trim();
+const BADGE = { off: ['☁ Off', 'off'], loggedout: ['☁ Not logged in', 'off'], synced: ['☁ Synced', 'ok'], pending: ['☁ Changes waiting…', 'wait'], saving: ['☁ Saving…', 'wait'], offline: ['☁ Offline', 'warn'], choice: ['☁ Needs your choice', 'warn'], error: ['☁ Sync error', 'bad'] };
+function updateBadge() {
+  const b = $('#cloudBadge'); if (!b) return;
+  const [txt, cls] = BADGE[A.sync.status] || BADGE.off; b.textContent = txt; b.className = 'badge ' + cls; b.title = A.sync.msg || 'Open Cloud & Backup';
+  const u = $('#userName'); if (u) u.textContent = A.user ? '👤 ' + A.user : '';
+}
+function onSyncStatus(info) {
+  A.sync = info; A.user = info.status === 'loggedout' || info.status === 'off' ? A.user : info.user;
+  if (info.status === 'loggedout') A.user = '';
+  updateBadge(); if (A.tab === 'cloud') renderCloud();
+}
+function stamp(ts) { return ts ? C.stamp(ts) : 'never'; }
+
+function renderCloud() {
+  const s = A.sync, url = cloudUrl(), st = s.status;
+  let top;
+  if (!url) top = '<p>No cloud link is set, so this PC works on its own. To share the masters between PCs, deploy the Apps Script (see the setup guide), then paste its <b>/exec</b> link here.</p><div class="row"><input id="curl" placeholder="https://script.google.com/macros/s/…/exec" aria-label="Cloud link"><button class="btn primary" data-act="saveurl">Save link</button></div>';
+  else if (st === 'loggedout' || (!BBSync.loggedIn() && st !== 'offline')) top = '<p>Not logged in. Masters and settings stay on this PC until you log in.</p><div class="actions"><button class="btn primary" data-act="login">Log in</button></div>';
+  else top = '<p>Logged in as <b>' + esc(s.user || A.user) + '</b>. Last synced: <b>' + esc(stamp(s.lastSync)) + '</b>.</p><div class="actions"><button class="btn" data-act="syncnow">Sync now</button><button class="btn" data-act="logout">Log out / change user</button></div>';
+  let choice = '';
+  if (st === 'choice' && s.pending) choice = '<div class="choice"><b>Two PCs changed the data before syncing.</b><p>The cloud copy was last saved by <b>' + esc(s.pending.by || 'someone') + '</b> on ' + esc(s.pending.updated ? C.stamp(Date.parse(s.pending.updated)) : '') + '. Choose what to keep:</p><div class="actions"><button class="btn primary" data-act="rcombine">Combine both (recommended)</button><button class="btn" data-act="rcloud">Use the cloud copy</button><button class="btn danger" data-act="rmine">Keep this PC\'s copy</button></div><p class="sub">Combine keeps every item and party from both and the newest edit of each. Use the cloud copy discards this PC\'s unsynced edits. Keep this PC\'s copy replaces the cloud.</p></div>';
+  if (st === 'error' || st === 'offline') choice += '<p class="errline">' + esc(s.msg) + '</p>';
+  if (st === 'loggedout' && s.msg) choice += '<p class="errline">' + esc(s.msg) + '</p>';
+  $('#main').innerHTML = '<section class="card"><div class="cardhead"><h2>Cloud sync</h2><span id="cloudBadge2" class="badge ' + (BADGE[st] || BADGE.off)[1] + '">' + esc((BADGE[st] || BADGE.off)[0]) + '</span></div>' + top + choice +
+    (url ? '<details class="more"><summary>Cloud link</summary><div class="row"><input id="curl" value="' + esc(url) + '" aria-label="Cloud link"><button class="btn" data-act="saveurl">Change link</button></div></details>' : '') + '</section>' +
+    '<section class="card"><h2>Backup</h2><p>A backup holds the item master, party master, settings and export log. Bills being prepared are not included.</p><div class="actions"><button class="btn" data-act="backup">Download backup (JSON)</button><button class="btn" data-act="restore">Restore from backup…</button></div></section>' +
+    '<section class="card"><h2>Excel</h2><p>The masters as an editable Excel file (two sheets: Items and Parties). Edit them in Excel and bring them back with <b>Import…</b> on the Item master or Party master tab.</p><div class="actions"><button class="btn" data-act="xlsxout">Download masters as Excel</button></div></section>' +
+    '<p class="foot">Best Bond Bill Builder v' + APP_VERSION + (STORAGE_OK ? '' : ' · <span class="badtxt">this browser is blocking storage, so changes are not remembered after closing</span>') + '</p>';
+}
+function bindCloud() {
+  $('#main').addEventListener('click', async (e) => {
+    if (A.tab !== 'cloud') return;
+    const a = e.target.closest('[data-act]'); if (!a) return; e.preventDefault();
+    const act = a.dataset.act;
+    if (act === 'saveurl') {
+      const v = ($('#curl').value || '').trim();
+      if (v && !/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(v)) { toast('That does not look like an Apps Script link. It should end with /exec.', 'err'); return; }
+      LS.set(KEY.url, v); BBSync.setUrl(cloudUrl()); toast(v ? 'Link saved.' : 'Link cleared.'); if (v) { await BBSync.init(syncHooks()); }
+      renderCloud();
+    } else if (act === 'login') showLogin('');
+    else if (act === 'logout') { BBSync.logout(); toast('Logged out.'); }
+    else if (act === 'syncnow') BBSync.syncNow().then(() => toast(A.sync.status === 'synced' ? 'Up to date.' : 'Sync did not finish: see the message.', A.sync.status === 'synced' ? '' : 'err'));
+    else if (act === 'rcombine') BBSync.resolve('merge'); else if (act === 'rcloud') BBSync.resolve('cloud');
+    else if (act === 'rmine') { if (await confirmBox('Replace the cloud copy with this PC\'s data? Anything only in the cloud is lost.', 'Replace cloud', true)) BBSync.resolve('mine'); }
+    else if (act === 'backup') backupDownload();
+    else if (act === 'restore') restoreBackup();
+    else if (act === 'xlsxout') mastersExcel();
+  });
+}
+function backupDownload() {
+  const d = new Date(), p = (n) => String(n).padStart(2, '0');
+  download('bestbond-backup-' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '-' + p(d.getHours()) + p(d.getMinutes()) + '.json', JSON.stringify({ app: 'bestbond-bill-builder', kind: 'backup', version: APP_VERSION, exported: d.toISOString(), data: DATA }, null, 1), 'application/json');
+  toast('Backup downloaded.');
+}
+async function restoreBackup() {
+  const f = await pickFile('.json,application/json'); if (!f) return;
+  let j; try { j = JSON.parse(await fileText(f)); } catch (e) { toast('That file is not a valid backup.', 'err'); return; }
+  const d = j && j.data ? j.data : j;
+  if (!d || !Array.isArray(d.items) || !Array.isArray(d.parties)) { toast('That file does not look like a Best Bond backup.', 'err'); return; }
+  const n = normData(d);
+  if (!(await confirmBox('Replace everything on this PC with the backup?\n\n' + n.items.filter((i) => !i.del).length + ' items, ' + n.parties.filter((p) => !p.del).length + ' parties, ' + n.log.length + ' log entries.', 'Restore', true))) return;
+  DATA = n; DATA.settings._u = Date.now(); saveData(); toast('Backup restored.'); refreshTab();
+}
+function mastersExcel() {
+  if (!hasXLSX()) { toast('The Excel writer did not load (no internet?). Use the backup file instead.', 'err'); return; }
+  const items = ctx().items.map((i) => ({ Name: i.name, Family: famName(i.family), Unit: i.unit, 'Stock Group': i.group, 'Tax Source': i.taxSource, HSN: i.hsn, 'HSN Description': i.hsnDesc, 'GST %': i.gst, 'Kg per pc': i.kgpc, Rate: i.rate, Aliases: i.aliases }));
+  const parties = ctx().parties.map((p) => ({ Name: p.name, GSTIN: p.gstin, Address: (p.addr || '').split('\n').join(' | '), Pincode: p.pin, Place: p.place, State: p.state, 'Address Type': p.addrType, Aliases: p.aliases }));
+  const X = window.XLSX, wb = X.utils.book_new();
+  X.utils.book_append_sheet(wb, X.utils.json_to_sheet(items), 'Items'); X.utils.book_append_sheet(wb, X.utils.json_to_sheet(parties), 'Parties');
+  X.writeFile(wb, 'BestBond-masters.xlsx');
+}
+
+// ---------- export log ----------
+function renderLog() {
+  const q = A.q.log.toLowerCase(), rows = DATA.log.filter((l) => !q || (l.voucher + ' ' + l.party + ' ' + l.user + ' ' + l.file).toLowerCase().includes(q));
+  $('#main').innerHTML = '<section class="card"><div class="cardhead"><h2>Export log <span class="count">' + DATA.log.length + '</span></h2><div class="actions"><input class="search" id="q" placeholder="Search the log" value="' + esc(A.q.log) + '" aria-label="Search the log"><button class="btn" data-act="logcsv">Download CSV</button></div></div>' +
+    '<div class="tablewrap"><table class="grid-t"><thead><tr><th>Exported</th><th>User</th><th>Voucher</th><th>Party</th><th>Bill date</th><th class="r">KG</th><th class="r">Taxable ₹</th><th class="r">Total ₹</th><th>File</th></tr></thead><tbody>' +
+    (rows.slice(0, 500).map((l) => '<tr><td>' + esc(C.stamp(l.ts)) + '</td><td>' + esc(l.user || '—') + '</td><td>' + (l.voucher ? esc(l.voucher) : '<span class="muted">by Tally</span>') + '</td><td>' + esc(l.party) + '</td><td>' + esc(l.date) + '</td><td class="r">' + C.kgFmt(l.kg) + '</td><td class="r">' + C.inr(l.taxable) + '</td><td class="r">' + C.inr(l.total) + '</td><td class="muted">' + esc(l.file) + '</td></tr>').join('') || '<tr><td colspan="9" class="empty">Nothing exported yet.</td></tr>') + '</tbody></table></div></section>';
+}
+function bindLog() {
+  const main = $('#main');
+  main.addEventListener('input', (e) => { if (A.tab === 'log' && e.target.id === 'q') { A.q.log = e.target.value; const pos = e.target.selectionStart; renderLog(); const q = $('#q'); q.focus(); q.setSelectionRange(pos, pos); } });
+  main.addEventListener('click', (e) => {
+    if (A.tab !== 'log') return; const a = e.target.closest('[data-act]'); if (!a || a.dataset.act !== 'logcsv') return;
+    const q = (s) => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
+    const lines = [['Exported', 'User', 'Voucher', 'Party', 'Bill date', 'KG', 'Taxable', 'Total', 'File'].join(',')].concat(DATA.log.map((l) => [C.stamp(l.ts), l.user, l.voucher, l.party, l.date, (l.kg / 100).toFixed(2), C.fixed(l.taxable), C.fixed(l.total), l.file].map(q).join(',')));
+    download('bestbond-export-log.csv', lines.join('\r\n'), 'text/csv');
+  });
+}
+
+// ---------- login screen ----------
+function showLogin(reason) {
+  const el = $('#login'); el.hidden = false;
+  el.innerHTML = '<form class="logincard" id="lform"><h1>Best Bond Bill Builder <span class="ver">v' + APP_VERSION + '</span></h1><p class="sub">Log in to share masters and settings between PCs.</p>' +
+    '<label>User name<input name="u" autocomplete="username" required></label><label>Password<input name="p" type="password" autocomplete="current-password" required></label>' +
+    '<p class="errline" id="lerr">' + esc(reason || '') + '</p><div class="actions"><button class="btn primary" type="submit">Log in</button><button class="btn ghost" type="button" id="lskip">Continue without logging in</button></div>' +
+    '<p class="sub">Without logging in, nothing syncs and the Export log records no user.</p></form>';
+  const u = $('[name=u]', el); u.focus();
+  $('#lskip', el).addEventListener('click', () => { el.hidden = true; });
+  $('#lform', el).addEventListener('submit', async (e) => {
+    e.preventDefault(); const f = e.target, btn = $('button[type=submit]', f); btn.disabled = true; $('#lerr', el).textContent = 'Checking…';
+    const r = await BBSync.login(f.u.value, f.p.value); btn.disabled = false;
+    if (r.ok) { el.hidden = true; toast('Logged in.'); refreshTab(); } else $('#lerr', el).textContent = r.error || 'Login failed.';
+  });
+}
+
+/* --- app_main.js --- */
+/* ===== start-up, tabs, theme, sync hooks ===== */
+const TABS = [['build', 'Build bills'], ['items', 'Item master'], ['parties', 'Party master'], ['settings', 'Settings'], ['cloud', 'Cloud & Backup'], ['log', 'Export log']];
+
+function setTab(t) {
+  A.tab = t; LS.set('bbbb.tab', t);
+  $$('#tabs [data-tab]').forEach((b) => { b.classList.toggle('on', b.dataset.tab === t); b.setAttribute('aria-selected', b.dataset.tab === t ? 'true' : 'false'); });
+  refreshTab();
+}
+function refreshTab() {
+  const f = { build: renderBuild, items: renderItems, parties: renderParties, settings: renderSettings, cloud: renderCloud, log: renderLog }[A.tab];
+  f(); if (A.tab !== 'build') window.scrollTo(0, 0);
+}
+function applyTheme(t) {
+  const root = document.documentElement; if (t === 'light' || t === 'dark') root.setAttribute('data-theme', t); else root.removeAttribute('data-theme');
+  const dark = t === 'dark' || (t !== 'light' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const b = $('#themeBtn'); if (b) { b.textContent = dark ? '☀' : '☾'; b.title = dark ? 'Switch to light theme' : 'Switch to dark theme'; b.setAttribute('aria-label', b.title); }
+}
+function syncHooks() {
+  return {
+    fetch: (u, o) => window.fetch(u, o), url: cloudUrl,
+    loadMeta: () => LS.get(KEY.meta, null), saveMeta: (m) => LS.set(KEY.meta, m),
+    loadAuth: () => LS.get(KEY.auth, null), saveAuth: (a) => (a ? LS.set(KEY.auth, a) : LS.del(KEY.auth)),
+    getData: () => clone({ items: DATA.items, parties: DATA.parties, settings: DATA.settings, log: DATA.log }),
+    setData: (d) => { DATA = normData(clone(d)); persist(); if (A.tab === 'build') { refreshLists(); syncBill(); } else refreshTab(); },
+    isEmpty: BBData.isEmpty, same: (a, b) => BBData.same(normData(clone(a)), normData(clone(b))), merge: (l, c) => normData(BBData.merge(l, c)),
+    onStatus: onSyncStatus, onLoginRefused: (reason) => { const el = $('#login'); if (el && el.hidden) showLogin(reason); },
+  };
+}
+
+function boot() {
+  DATA = loadData(); loadBills();
+  document.title = 'Best Bond Bill Builder';
+  $('#app').innerHTML =
+    '<header class="top"><div class="brand"><span class="logo" aria-hidden="true">BB</span><h1>Best Bond Bill Builder</h1><span class="ver" id="verBadge" title="Tool version">v' + APP_VERSION + '</span></div>' +
+    '<div class="right"><span id="userName" class="user"></span><button id="cloudBadge" class="badge off" data-tab="cloud">☁ Off</button><button id="themeBtn" class="icon theme" aria-label="Switch theme"></button></div></header>' +
+    '<nav id="tabs" class="tabs" role="tablist">' + TABS.map(([k, l]) => '<button role="tab" data-tab="' + k + '" aria-selected="false">' + esc(l) + '</button>').join('') + '</nav><main id="main"></main>';
+  applyTheme(LS.get(KEY.theme, ''));
+  $('#themeBtn').addEventListener('click', () => { const cur = document.documentElement.getAttribute('data-theme'); const dark = cur === 'dark' || (!cur && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); const nxt = dark ? 'light' : 'dark'; LS.set(KEY.theme, nxt); applyTheme(nxt); });
+  $('#tabs').addEventListener('click', (e) => { const b = e.target.closest('[data-tab]'); if (b) setTab(b.dataset.tab); });
+  $('#cloudBadge').addEventListener('click', () => setTab('cloud'));
+  bindBuild(); bindMasters(); bindSettings(); bindCloud(); bindLog();
+  const t = LS.get('bbbb.tab', 'build'); A.tab = TABS.some((x) => x[0] === t) ? t : 'build';
+  setTab(A.tab);
+  window.addEventListener('beforeunload', () => { try { LS.set(KEY.bills, { bills: A.bills, cur: A.cur }); } catch (e) { /* ignore */ } });
+  window.addEventListener('online', () => BBSync.syncNow());
+  const hooks = syncHooks();
+  BBSync.init(hooks).then(() => { if (BBSync.info().status === 'loggedout' && cloudUrl()) showLogin(BBSync.info().msg); });
+  if (cloudUrl() && !LS.get(KEY.auth, null)) showLogin('');
+}
+document.addEventListener('DOMContentLoaded', boot);
+
+</script>
+</body>
+</html>
