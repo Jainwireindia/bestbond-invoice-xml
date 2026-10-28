@@ -7,14 +7,14 @@
 <meta name="description" content="Prepares Best Bond Steels sales bills in KG with weight adjustment and exports TallyPrime XML.">
 <script>try{var t=localStorage.getItem('bbbb.theme');if(t){t=JSON.parse(t);if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}}catch(e){}</script>
 <style>
-:root{--bg:#f3f4f7;--surface:#fff;--surface2:#f8f9fb;--text:#17202b;--muted:#5b6676;--border:#dbe0e8;--accent:#1d4ed8;--accent-ink:#fff;--ok:#0f7a55;--warn:#a65a05;--bad:#c0262d;--okbg:#e2f4ec;--warnbg:#fcefd6;--badbg:#fde7e7;--infobg:#e4edfd;--manual:#eaf0ff;--shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1318;--surface:#161d25;--surface2:#1b242e;--text:#e5eaf0;--muted:#93a0b1;--border:#2a3542;--accent:#6b9cff;--accent-ink:#0b1220;--ok:#4cc79a;--warn:#f0b35a;--bad:#ff8a8f;--okbg:#10372b;--warnbg:#3b2c10;--badbg:#401a1c;--infobg:#172a4d;--manual:#1a2742;--shadow:none}}
-:root[data-theme="dark"]{--bg:#0e1318;--surface:#161d25;--surface2:#1b242e;--text:#e5eaf0;--muted:#93a0b1;--border:#2a3542;--accent:#6b9cff;--accent-ink:#0b1220;--ok:#4cc79a;--warn:#f0b35a;--bad:#ff8a8f;--okbg:#10372b;--warnbg:#3b2c10;--badbg:#401a1c;--infobg:#172a4d;--manual:#1a2742;--shadow:none}
+:root{--bg:#f6f3f5;--surface:#fff;--surface2:#faf7f9;--text:#231a1f;--muted:#6e6168;--border:#e4dae0;--accent:#6b4256;--accent-hover:#5a3748;--accent-ink:#fff;--heading:#6b4256;--ok:#0f7a55;--warn:#a65a05;--bad:#c0262d;--okbg:#e2f4ec;--warnbg:#fcefd6;--badbg:#fde7e7;--infobg:#f3e9ee;--manual:#f1e5eb;--shadow:0 1px 2px rgba(60,30,45,.06),0 1px 3px rgba(60,30,45,.08)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141013;--surface:#1d171b;--surface2:#251d22;--text:#ede6ea;--muted:#a8999f;--border:#3a2e35;--accent:#d4a5bc;--accent-hover:#e0b8cb;--accent-ink:#2a1520;--heading:#e3bfd0;--ok:#4cc79a;--warn:#f0b35a;--bad:#ff8a8f;--okbg:#10372b;--warnbg:#3b2c10;--badbg:#401a1c;--infobg:#3a2530;--manual:#33212b;--shadow:none}}
+:root[data-theme="dark"]{--bg:#141013;--surface:#1d171b;--surface2:#251d22;--text:#ede6ea;--muted:#a8999f;--border:#3a2e35;--accent:#d4a5bc;--accent-hover:#e0b8cb;--accent-ink:#2a1520;--heading:#e3bfd0;--ok:#4cc79a;--warn:#f0b35a;--bad:#ff8a8f;--okbg:#10372b;--warnbg:#3b2c10;--badbg:#401a1c;--infobg:#3a2530;--manual:#33212b;--shadow:none}
 *{box-sizing:border-box}
 html{color-scheme:light dark}
 :root[data-theme="light"]{color-scheme:light}:root[data-theme="dark"]{color-scheme:dark}
 body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-h1,h2,h3,h4{margin:0}h2{font-size:16px;margin-bottom:12px}h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px}h4{font-size:13px;margin:12px 0 6px}
+h1,h2,h3,h4{margin:0}h1,h2,h4{color:var(--heading)}h2{font-size:16px;margin-bottom:12px}h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px}h4{font-size:13px;margin:12px 0 6px}
 a{color:var(--accent)}
 button{font:inherit;color:inherit;cursor:pointer}
 input,select,textarea{font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 9px;width:100%;min-width:0}
@@ -40,9 +40,9 @@ main{max-width:1360px;margin:0 auto;padding:16px}
 .cardhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}.cardhead h2{margin:0}
 .count{font-size:12px;font-weight:600;color:var(--muted);background:var(--surface2);border-radius:99px;padding:1px 8px;margin-left:6px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.actions.end{justify-content:flex-end;margin-top:12px}
-.btn{border:1px solid var(--border);background:var(--surface);border-radius:7px;padding:7px 13px;font-weight:600}.btn:hover{background:var(--surface2)}
-.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.btn.primary:hover{filter:brightness(1.08)}
-.btn.danger{color:var(--bad);border-color:var(--bad)}.btn.ghost{border-color:transparent;color:var(--muted)}
+.btn{border:1px solid var(--border);background:var(--surface);color:var(--accent);border-radius:7px;padding:7px 13px;font-weight:600}.btn:hover{background:var(--surface2)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.btn.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.btn.danger{color:var(--bad);border-color:var(--bad)}.btn.ghost{border-color:transparent;color:var(--muted)}.btn.primary{color:var(--accent-ink)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .grid{display:grid;gap:12px}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.span2{grid-column:span 2}.span3{grid-column:1/-1}
 .stack{display:grid;gap:12px;align-content:start}
@@ -95,14 +95,14 @@ td.num{padding-top:11px!important;white-space:nowrap}.strong{font-weight:700}
 .mini{font-size:12px}.mini td,.mini th{padding:3px 6px;border-bottom:1px solid var(--border)}
 .modal-bg{position:fixed;inset:0;background:rgba(10,15,22,.55);display:grid;place-items:center;padding:16px;z-index:50;overflow:auto}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:min(520px,100%);max-height:calc(100vh - 32px);display:flex;flex-direction:column}.modal.wide{width:min(860px,100%)}
-.modal header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border)}.modal header h3{font-size:16px;text-transform:none;letter-spacing:0;color:var(--text);margin:0}
+.modal header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border)}.modal header h3{font-size:16px;text-transform:none;letter-spacing:0;color:var(--heading);margin:0}
 .modal .x{border:0;background:none;font-size:22px;color:var(--muted)}
 .mbody{padding:16px 18px;overflow:auto}.mbody p{margin-top:0}.pre{white-space:pre-line}
 .modal footer{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:1px solid var(--border)}
 .toasts,#toasts{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);display:grid;gap:8px;z-index:80;width:min(560px,calc(100% - 32px))}
 .toast{background:var(--text);color:var(--bg);border-radius:8px;padding:10px 14px;box-shadow:0 6px 20px rgba(0,0,0,.25);transition:opacity .35s}.toast.err{background:var(--bad);color:#fff}.toast.out{opacity:0}
 #login{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:60;padding:16px}#login[hidden]{display:none}
-.logincard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:26px;width:min(400px,100%);display:grid;gap:12px;box-shadow:var(--shadow)}.logincard h1{font-size:19px}
+.logincard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:26px;width:min(400px,100%);display:grid;gap:12px;box-shadow:var(--shadow)}.logincard h1{font-size:19px}.brand h1{color:var(--heading)}
 @media (max-width:900px){.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}.sumgrid{grid-template-columns:1fr}.search{width:100%}}
 @media (max-width:560px){.g4,.g3{grid-template-columns:1fr}.span2,.span3{grid-column:auto}main{padding:12px}.finwrap .lock{left:auto;right:4px;top:3px}}
 @media print{.top,.tabs,.actions,#toasts{display:none}}
@@ -433,7 +433,14 @@ const BBData = (function () {
   const stable = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x) ? Object.keys(x).sort().reduce((o, key) => ((o[key] = x[key]), o), {}) : x));
   const live = (a) => (a || []).filter((r) => !r.del);
   function isEmpty(d) { return !d || (live(d.items).length === 0 && live(d.parties).length === 0); }
-  function same(a, b) { return stable(a) === stable(b); }
+  // The Sheet gives back '' for a missing field, numbers as numbers and {} for no rates: compare the meaning, not the spelling.
+  function canon(v) {
+    if (Array.isArray(v)) { const a = v.map(canon); return a.length ? a : undefined; }
+    if (v && typeof v === 'object') { const o = {}; Object.keys(v).forEach((k) => { const x = canon(v[k]); if (x !== undefined) o[k] = x; }); return Object.keys(o).length ? o : undefined; }
+    if (v === '' || v === null || v === undefined || v === false) return undefined;
+    return String(v);
+  }
+  function same(a, b) { return stable(canon(a) || {}) === stable(canon(b) || {}); }
   function newId(p) { return p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
   function mergeList(local, cloud) {
     const m = new Map();
@@ -451,7 +458,7 @@ const BBData = (function () {
     const log = mergeList(local.log, cloud.log).sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 3000);
     return { items: mergeList(local.items, cloud.items), parties: mergeList(local.parties, cloud.parties), settings, log };
   }
-  return { stable, isEmpty, same, newId, merge, mergeList, live };
+  return { stable, canon, isEmpty, same, newId, merge, mergeList, live };
 })();
 if (typeof module === 'object') module.exports = BBData;
 
@@ -625,13 +632,13 @@ if (typeof module === 'object') module.exports = BBTools;
 /* ===== BBSync : cloud sync client for the Apps Script web app (one JSON file in Drive) ===== */
 const BBSync = (function () {
   'use strict';
-  const st = { status: 'off', msg: '', url: '', user: '', pass: '', rev: null, dirty: false, lastSync: 0, pending: null };
+  const st = { status: 'off', msg: '', url: '', user: '', pass: '', sheet: '', rev: null, dirty: false, lastSync: 0, pending: null };
   let H = null, pushTimer = null, pollTimer = null, chain = Promise.resolve();
   const PUSH_DELAY = 3000, POLL_EVERY = 120000;
 
   function emit(status, msg) { st.status = status; st.msg = msg || ''; if (H && H.onStatus) H.onStatus(info()); }
-  function info() { return { status: st.status, msg: st.msg, user: st.user, rev: st.rev, dirty: st.dirty, lastSync: st.lastSync, pending: st.pending ? { rev: st.pending.rev, by: st.pending.by, updated: st.pending.updated } : null, url: st.url }; }
-  function saveMeta() { H.saveMeta({ rev: st.rev, dirty: st.dirty, lastSync: st.lastSync }); }
+  function info() { return { status: st.status, msg: st.msg, user: st.user, rev: st.rev, dirty: st.dirty, lastSync: st.lastSync, pending: st.pending ? { rev: st.pending.rev, by: st.pending.by, updated: st.pending.updated } : null, url: st.url, sheet: st.sheet }; }
+  function saveMeta() { H.saveMeta({ rev: st.rev, dirty: st.dirty, lastSync: st.lastSync, sheet: st.sheet }); }
   const queue = (fn) => (chain = chain.then(fn, fn).catch(() => {}));   // one cloud operation at a time
 
   async function call(a, extra) {
@@ -654,20 +661,20 @@ const BBSync = (function () {
   // ---- public: start / login / logout ----
   function init(h) {
     H = h; const m = H.loadMeta() || {};
-    st.rev = m.rev == null ? null : m.rev; st.dirty = !!m.dirty; st.lastSync = m.lastSync || 0;
+    st.rev = m.rev == null ? null : m.rev; st.dirty = !!m.dirty; st.lastSync = m.lastSync || 0; st.sheet = m.sheet || '';
     st.url = H.url() || '';
     const a = H.loadAuth(); if (a) { st.user = a.user; st.pass = a.pass; }
     if (!st.url) { emit('off', 'Cloud link not set'); return Promise.resolve(); }
     if (!st.user || !st.pass) { emit('loggedout', ''); return Promise.resolve(); }
     emit('pending', 'Checking the cloud...');
-    return queue(async () => { try { const r = await call('login'); if (!r.ok) throw r; startLoops(); await reconcile(); } catch (e) { fail(e); if (e && e.code === 'OFFLINE') startLoops(); } });
+    return queue(async () => { try { const r = await call('login'); if (!r.ok) throw r; if (r.sheet) st.sheet = r.sheet; startLoops(); await reconcile(); } catch (e) { fail(e); if (e && e.code === 'OFFLINE') startLoops(); } });
   }
   async function login(user, pass) {
     st.user = String(user || '').trim(); st.pass = String(pass || '');
     return queue(async () => {
       try {
         const r = await call('login'); if (!r.ok) throw r;
-        st.user = r.user || st.user; H.saveAuth({ user: st.user, pass: st.pass });
+        st.user = r.user || st.user; if (r.sheet) st.sheet = r.sheet; H.saveAuth({ user: st.user, pass: st.pass });
         startLoops(); await reconcile(); return { ok: true };
       } catch (e) { const code = e && e.code; if (code !== 'OFFLINE') { st.pass = ''; } fail(e); return { ok: false, error: (e && e.error) || 'Login failed', code }; }
     });
@@ -682,7 +689,7 @@ const BBSync = (function () {
   // ---- first sync / pull ----
   async function reconcile() {
     emit('pending', 'Syncing...');
-    const c = await call('get'); if (!c.ok) throw c;
+    const c = await call('get'); if (!c.ok) throw c; if (c.sheet) st.sheet = c.sheet;
     const local = H.getData();
     if (!c.data) {                                           // nothing in the cloud yet
       if (H.isEmpty(local)) { st.rev = c.rev || 0; st.dirty = false; ok(); return; }
@@ -826,7 +833,7 @@ async function sheetToTsv(file) {         // first worksheet of an Excel/CSV fil
 
 /* --- app_state.js --- */
 /* ===== state, storage, bills, validation ===== */
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.0';
 const CLOUD_URL = '';           // paste the Apps Script web app link (ends with /exec) here, or enter it under Cloud & Backup
 const KEY = { data: 'bbbb.data.v1', bills: 'bbbb.bills.v1', meta: 'bbbb.sync.v1', auth: 'bbbb.auth.v1', theme: 'bbbb.theme', url: 'bbbb.cloudurl' };
 const C = BBCalc;
@@ -1504,9 +1511,9 @@ function stamp(ts) { return ts ? C.stamp(ts) : 'never'; }
 function renderCloud() {
   const s = A.sync, url = cloudUrl(), st = s.status;
   let top;
-  if (!url) top = '<p>No cloud link is set, so this PC works on its own. To share the masters between PCs, deploy the Apps Script (see the setup guide), then paste its <b>/exec</b> link here.</p><div class="row"><input id="curl" placeholder="https://script.google.com/macros/s/…/exec" aria-label="Cloud link"><button class="btn primary" data-act="saveurl">Save link</button></div>';
+  if (!url) top = '<p>No cloud link is set, so this PC works on its own. To share the masters between PCs, set up the Google Sheet and its Apps Script (see the setup guide), then paste its <b>/exec</b> link here.</p><div class="row"><input id="curl" placeholder="https://script.google.com/macros/s/…/exec" aria-label="Cloud link"><button class="btn primary" data-act="saveurl">Save link</button></div>';
   else if (st === 'loggedout' || (!BBSync.loggedIn() && st !== 'offline')) top = '<p>Not logged in. Masters and settings stay on this PC until you log in.</p><div class="actions"><button class="btn primary" data-act="login">Log in</button></div>';
-  else top = '<p>Logged in as <b>' + esc(s.user || A.user) + '</b>. Last synced: <b>' + esc(stamp(s.lastSync)) + '</b>.</p><div class="actions"><button class="btn" data-act="syncnow">Sync now</button><button class="btn" data-act="logout">Log out / change user</button></div>';
+  else top = '<p>Logged in as <b>' + esc(s.user || A.user) + '</b>. Last synced: <b>' + esc(stamp(s.lastSync)) + '</b>.' + (/^https:\/\/docs\.google\.com\//.test(s.sheet || '') ? ' <a href="' + esc(s.sheet) + '" target="_blank" rel="noopener">Open the Google Sheet</a>' : '') + '</p><p class="sub">Items, parties, party rates, settings and the export log are kept in the Google Sheet. Edits made in the Sheet reach every PC within 2 minutes.</p><div class="actions"><button class="btn" data-act="syncnow">Sync now</button><button class="btn" data-act="logout">Log out / change user</button></div>';
   let choice = '';
   if (st === 'choice' && s.pending) choice = '<div class="choice"><b>Two PCs changed the data before syncing.</b><p>The cloud copy was last saved by <b>' + esc(s.pending.by || 'someone') + '</b> on ' + esc(s.pending.updated ? C.stamp(Date.parse(s.pending.updated)) : '') + '. Choose what to keep:</p><div class="actions"><button class="btn primary" data-act="rcombine">Combine both (recommended)</button><button class="btn" data-act="rcloud">Use the cloud copy</button><button class="btn danger" data-act="rmine">Keep this PC\'s copy</button></div><p class="sub">Combine keeps every item and party from both and the newest edit of each. Use the cloud copy discards this PC\'s unsynced edits. Keep this PC\'s copy replaces the cloud.</p></div>';
   if (st === 'error' || st === 'offline') choice += '<p class="errline">' + esc(s.msg) + '</p>';
